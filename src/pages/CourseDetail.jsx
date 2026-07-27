@@ -4,6 +4,7 @@ import { go, waLink } from '../router.js'
 import { Check } from '../icons.jsx'
 import { totals } from '../utils.js'
 import { CurriculumSection, Faq } from '../components/Curriculum.jsx'
+import BackLink from '../components/BackLink.jsx'
 
 export default function CourseDetail({ slug, onBook }) {
   const c = COURSES[slug]
@@ -15,7 +16,7 @@ export default function CourseDetail({ slug, onBook }) {
     return (
       <div>
         <div className="cp-wrap">
-          <span className="cp-back" onClick={() => go('courses')} style={{ cursor: 'pointer' }}>← All courses</span>
+          <BackLink to="courses">← All courses</BackLink>
           <p className="cp-eyebrow">{cat ? cat.tag : 'Course'}</p>
           <h1 className="cp-title">{cat ? cat.name : 'Course'}</h1>
           <p className="cp-sub">{cat ? cat.desc : ''}</p>
@@ -33,15 +34,15 @@ export default function CourseDetail({ slug, onBook }) {
 
   const t = totals(c.sections)
   const incl = [
-    `${t.hours} hours of HD video`,
-    `${t.lessons} lessons across ${t.sections} section${t.sections > 1 ? 's' : ''}`,
+    `${t.hm} of video — ${t.coreHm} lessons, ${t.projectHm} project`,
+    `${t.lessons} videos across ${t.modules} modules`,
+    c.project ? `Guided project: ${c.project}` : 'Guided project included',
+    c.assignments ? `${c.assignments.length} practice assignments` : 'Practice assignments',
     'Lifetime access — learn at your pace',
-    'Downloadable project files & code',
-    'Portfolio-ready project',
     'Certificate of completion',
   ]
   const faqs = [
-    ['How is this different from free YouTube tutorials?', 'Clear, structured, and drawn from 14+ years of real product engineering at companies like Arista and HPE. A deliberate path in the exact order that builds understanding.'],
+    ['How is this different from free YouTube tutorials?', 'Clear, structured, and drawn from 14+ years of real product engineering at global product companies. A deliberate path in the exact order that builds understanding.'],
     ['Do I need prior experience?', c.prereqTitle === 'No prior knowledge needed' ? 'None at all. This course starts from the very beginning and assumes nothing.' : 'You should be comfortable with the earlier part(s) of this series. If not, start there first.'],
     ['Is it really free to preview?', `Yes. ${t.previews} lessons are free to watch so you can judge the teaching before buying.`],
     ['How long do I have access?', 'Lifetime. Buy once, watch forever, including future updates.'],
@@ -53,9 +54,9 @@ export default function CourseDetail({ slug, onBook }) {
   return (
     <div>
       <div className="cp-wrap">
-        <span className="cp-back" onClick={() => go('courses')} style={{ cursor: 'pointer' }}>← All courses</span>
+        <BackLink to="courses">← All courses</BackLink>
         <div className="cp-top">
-          <div>
+          <div className="cp-main">
             <p className="cp-eyebrow">Clear, practical, no filler</p>
             {c.series && (
               <div className="series-nav">
@@ -73,11 +74,12 @@ export default function CourseDetail({ slug, onBook }) {
               <span>{c.prereqTitle === 'No prior knowledge needed' ? 'Beginner-friendly · no prior knowledge needed' : 'Builds on the earlier parts'}</span>
             </div>
             <div className="cp-badges">
-              <span className="cp-badge">{t.hours} hours</span>
-              <span className="cp-badge">{t.lessons} lessons</span>
+              <span className="cp-badge">{t.hm}</span>
+              <span className="cp-badge">{t.lessons} videos</span>
+              <span className="cp-badge">{t.modules} modules</span>
               <span className="cp-badge">{t.previews} free previews</span>
-              <span className="cp-badge">Lifetime access</span>
             </div>
+
           </div>
           <div className="buybox">
             <span className="preview-tag"><Check /> Free preview available</span>
@@ -90,19 +92,26 @@ export default function CourseDetail({ slug, onBook }) {
             <div className="incl-t">What's included</div>
             <ul>{incl.map((x, i) => <li key={i}><Check /><span>{x}</span></li>)}</ul>
           </div>
-        </div>
-      </div>
 
-      <div className="cp-sec wide">
-        <div className="cp-eyebrow2">Highly practical</div>
-        <h2 className="cp-h2">What you'll learn</h2>
-        <ul className="learn-grid">{c.learn.map((x, i) => <li key={i}><Check /><span>{x}</span></li>)}</ul>
+          {/* Grid-placed into column 1 row 2, so on desktop it fills the space
+              beside the buy box. Kept AFTER the buy box in source order so the
+              single-column mobile stack keeps the CTA above it. */}
+          <div className="cp-learn">
+            <div className="cp-eyebrow2">Highly practical</div>
+            <h2 className="cp-h2">What you'll learn</h2>
+            <ul className="learn-grid">{c.learn.map((x, i) => <li key={i}><Check /><span>{x}</span></li>)}</ul>
+          </div>
+        </div>
       </div>
 
       <div className="cp-sec" id="curriculum">
         <div className="cp-eyebrow2">A perfectly structured path</div>
         <h2 className="cp-h2">Course content</h2>
-        <div className="cur-note">{t.hours} hours · {t.sections} section{t.sections > 1 ? 's' : ''} · {t.lessons} lessons · {t.previews} free to preview</div>
+        <div className="cur-note">
+          {t.modules} modules · {t.coreVideos} concept videos ({t.coreHm})
+          {c.project && <> · guided project, {t.projectVideos} videos ({t.projectHm})</>}
+          {' · '}{t.hm} total · {t.previews} free to preview
+        </div>
         {c.sections.map((s, i) => (
           <CurriculumSection key={i} sec={s} open={openSec === i} onToggle={() => setOpenSec(openSec === i ? -1 : i)} />
         ))}
@@ -113,6 +122,16 @@ export default function CourseDetail({ slug, onBook }) {
         <h2 className="cp-h2">Who this course is for</h2>
         <ul className="who-grid">{c.who.map((x, i) => <li key={i}><span>{x}</span></li>)}</ul>
       </div>
+
+      {c.assignments && (
+        <div className="cp-sec">
+          <div className="cp-eyebrow2">Practise what you learn</div>
+          <h2 className="cp-h2">Assignments</h2>
+          <ol className="assign-grid">
+            {c.assignments.map((a) => <li key={a}><span>{a}</span></li>)}
+          </ol>
+        </div>
+      )}
 
       <div className="cp-sec">
         <div className="cp-eyebrow2">{c.prevCourse ? 'What you should know first' : 'A complete beginner-friendly course'}</div>

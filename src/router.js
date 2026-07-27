@@ -5,6 +5,7 @@ export function parseHash() {
   const parts = h.split('/').filter(Boolean)
   if (parts[0] === 'courses' && parts[1]) return { page: 'course', slug: parts[1] }
   if (parts[0] === 'courses') return { page: 'courses' }
+  if (parts[0] === 'work' && parts[1]) return { page: 'project', slug: parts[1] }
   if (parts[0] === 'work') return { page: 'work' }
   return { page: 'home' }
 }

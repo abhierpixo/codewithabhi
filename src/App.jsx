@@ -6,6 +6,7 @@ import Home from './pages/Home.jsx'
 import Courses from './pages/Courses.jsx'
 import CourseDetail from './pages/CourseDetail.jsx'
 import Work from './pages/Work.jsx'
+import ProjectDetail from './pages/ProjectDetail.jsx'
 
 export default function App() {
   const route = useRoute()
@@ -17,6 +18,7 @@ export default function App() {
   if (route.page === 'courses') page = <Courses />
   else if (route.page === 'course') page = <CourseDetail slug={route.slug} onBook={onBook} />
   else if (route.page === 'work') page = <Work onBook={onBook} />
+  else if (route.page === 'project') page = <ProjectDetail slug={route.slug} onBook={onBook} />
   else page = <Home onBook={onBook} />
 
   return (

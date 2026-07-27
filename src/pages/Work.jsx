@@ -1,68 +1,73 @@
-import { PROJECTS } from '../data/projects.js'
+import { PROJECTS, SERVICES, DELIVERED_VIA } from '../data/projects.js'
 import { go } from '../router.js'
+import BackLink from '../components/BackLink.jsx'
 
 /**
- * Showcase of shipped products. Each card links out to the product's own site
- * when there is a public one; entries without a URL stay non-clickable rather
- * than pointing somewhere misleading.
+ * Selected client work. Cards open an in-site detail page rather than linking
+ * straight out, so the showcase is complete without depending on public repos
+ * or hosted demos — external links live on the detail page when they exist.
  */
 export default function Work({ onBook }) {
   return (
     <div>
       <div className="cp-wrap" style={{ paddingBottom: 0 }}>
-        <span className="cp-back" onClick={() => go('')} style={{ cursor: 'pointer' }}>← Home</span>
-        <p className="cp-eyebrow">Portfolio</p>
-        <h1 className="cp-title">What I've built</h1>
+        <BackLink to="">← Home</BackLink>
+        <p className="cp-eyebrow">Selected work</p>
+        <h1 className="cp-title">Six products, six landing pages</h1>
         <p className="cp-sub">
-          Fourteen years of shipped products — the work behind everything I teach.
-          Where a product has a public page, the card links straight to it.
+          Each one is a real, working codebase. Click any project to see what it does,
+          how it's built, and the problem it solves.
         </p>
+        <p className="work-attrib">{DELIVERED_VIA}</p>
       </div>
 
       <section style={{ paddingTop: 40 }}>
         <div className="work-grid">
-          {PROJECTS.map((p) => {
-            const live = Boolean(p.url)
-            const Card = live ? 'a' : 'div'
-            const linkProps = live
-              ? { href: p.url, target: '_blank', rel: 'noopener noreferrer' }
-              : {}
-            return (
-              <Card key={p.slug} className={'work-card ' + p.accent + (live ? ' is-live' : '')} {...linkProps}>
-                <div className="work-top">
-                  <span className="work-when">{p.period}</span>
-                  {live && <span className="work-go" aria-hidden="true">↗</span>}
-                </div>
-                <h3>{p.name}</h3>
-                <div className="work-org">{p.org}</div>
-                <p>{p.blurb}</p>
-                <div className="work-tech">
-                  {p.tech.map((t) => <i key={t}>{t}</i>)}
-                </div>
-                <div className={'work-link' + (live ? '' : ' muted')}>
-                  {live ? 'Visit the product site →' : p.note}
-                </div>
-              </Card>
-            )
-          })}
+          {PROJECTS.map((p) => (
+            <button
+              key={p.slug}
+              type="button"
+              className={'work-card is-live ' + p.accent}
+              onClick={() => go('work/' + p.slug)}
+            >
+              <div className="work-top">
+                <span className="work-when">{p.tag}</span>
+                {p.shipped && <span className="work-shipped">Shipped</span>}
+              </div>
+              <h3>{p.name}</h3>
+              <p>{p.blurb}</p>
+              <div className="work-tech">
+                {p.tech.map((t) => <i key={t}>{t}</i>)}
+              </div>
+              <div className="work-link">Explore project <span aria-hidden="true">→</span></div>
+            </button>
+          ))}
         </div>
       </section>
 
+      <div className="cp-sec" style={{ paddingTop: 60 }}>
+        <div className="cp-eyebrow2">What I can build for you</div>
+        <h2 className="cp-h2">Three ways to work with me</h2>
+        <div className="svc-grid">
+          {SERVICES.map((s) => (
+            <div key={s.name} className="svc-card">
+              <h3>{s.name}</h3>
+              <p>{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="cp-sec" style={{ textAlign: 'center', paddingBottom: 80 }}>
         <h2 className="cp-h2" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-          Want to build like this?
+          Have something like this to build?
         </h2>
         <p style={{ color: '#94A3B8', maxWidth: '48ch', margin: '0 auto 24px' }}>
-          Everything I teach comes out of shipping these — real products, real users, real scale.
+          Tell me what you need and I'll tell you honestly whether I'm the right person for it.
         </p>
-        <button className="btn btn-green" onClick={() => onBook('15-min free consultation')}>
-          Book a free consultation
+        <button className="btn btn-green" onClick={() => onBook('Project enquiry')}>
+          Start a project conversation
         </button>
-        <div style={{ marginTop: 18 }}>
-          <span className="cp-back" style={{ color: '#60A5FA', cursor: 'pointer' }} onClick={() => go('courses')}>
-            Browse the courses →
-          </span>
-        </div>
       </div>
     </div>
   )
