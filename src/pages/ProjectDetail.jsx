@@ -34,10 +34,12 @@ export default function ProjectDetail({ slug, onBook }) {
       <div className="cp-wrap">
         <BackLink to="work">← All work</BackLink>
         <div className="pd-head">
+          {/* the -viz variant carries only the infographic; the page states the
+              tag, title and stack in real text just below */}
           <img
             className="pd-thumb"
-            src={`/thumbs/${p.slug}.png`}
-            alt={`${p.name} — ${p.tag}`}
+            src={`/thumbs/${p.slug}-viz.png`}
+            alt={`Illustration of ${p.name}`}
             width="1200"
             height="630"
           />

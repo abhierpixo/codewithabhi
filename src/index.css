@@ -542,6 +542,7 @@ h2,.sec-intro{text-align:center;margin-left:auto;margin-right:auto}
 .learn-grid,.who-grid{text-align:left;max-width:820px;margin-left:auto;margin-right:auto}
 .cur-sec{text-align:left;max-width:900px;margin-left:auto;margin-right:auto}
 .prose-card{margin-left:auto;margin-right:auto;text-align:left}
+.cp-sec .prose-card{max-width:var(--pd-measure)}
 .faq-item{max-width:820px;margin-left:auto;margin-right:auto;text-align:left}
 .buybox{text-align:left}
 
@@ -824,7 +825,7 @@ header h1 .line:nth-child(2){animation-delay:.38s}
   border-radius:15px 15px 0 0;border-bottom:1px solid var(--soft);
 }
 .pd-thumb{
-  display:block;width:100%;height:auto;max-width:820px;
+  display:block;width:100%;height:auto;max-width:var(--pd-measure);
   aspect-ratio:1200/630;object-fit:cover;
   border:1px solid var(--soft);border-radius:16px;margin-bottom:26px;
 }
@@ -846,12 +847,21 @@ header h1 .line:nth-child(2){animation-delay:.38s}
 .work-link span{transition:transform .25s}
 
 /* project detail */
-.pd-head{max-width:820px}
+/* One shared measure for the whole page. Without margin-inline:auto this
+   block sat flush-left in the 976px content area — 78px off the centre
+   line that every section below it uses. */
+:root{--pd-measure:820px}
+.pd-head{max-width:var(--pd-measure);margin-inline:auto}
+.pd-head .cp-sub{max-width:none}   /* the measure is the block, not the text */
 .pd-tech{margin-top:22px}
-.pd-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+/* These are flex rows inside a centred, text-align:center block — flex
+   ignores text-align, so without justify-content they sat hard left while
+   the headline and blurb above them were centred. */
+.pd-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;justify-content:center}
+.pd-tech{justify-content:center}
 .pd-links .btn{display:inline-block}
 .pd-build{
-  list-style:none;max-width:820px;margin:0 auto;text-align:left;
+  list-style:none;max-width:var(--pd-measure);margin:0 auto;text-align:left;
   display:grid;gap:10px;
 }
 .pd-build li{
