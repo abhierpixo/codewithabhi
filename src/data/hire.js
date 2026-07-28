@@ -19,17 +19,19 @@ export const PROOF_STATS = [
 ]
 
 /**
- * [NEEDS YOU] Your marketplace and profile links.
- * These do the work testimonials would — a client can go and read real reviews.
- * Send me the URLs and I'll wire them in and verify each one resolves.
+ * Places a client can go and check you out.
+ *
+ * DO NOT ADD THE UPWORK PROFILE UNTIL IT HAS REVIEWS. A profile showing zero
+ * jobs sends a client back less convinced than before they clicked — the same
+ * reason the GitHub link is held back. Add it here the day the first review
+ * lands; until then this page IS the proof, which is why the App Store app
+ * leads: it is the one thing a stranger can download and use right now.
  */
 export const PROFILES = [
-  // { name: 'Upwork',  url: '', note: 'Verified reviews and job history' },
-  // { name: 'Fiverr',  url: '', note: 'Verified reviews' },
   {
-    name: 'App Store',
+    name: 'Download the app I built',
     url: 'https://apps.apple.com/in/app/qontentt-ai/id6499059333',
-    note: 'Qontentt AI — a product I built, live and downloadable',
+    note: 'Qontentt AI on the App Store — live, published, in users\' hands. Not a demo.',
   },
   {
     name: 'LinkedIn',
@@ -39,9 +41,15 @@ export const PROFILES = [
 ]
 
 /**
- * [NEEDS YOU] Real client quotes only, with permission and correct attribution.
- * Send me the text and how each person should be credited. I will not write
- * these — invented testimonials are the fastest way to lose a client who checks.
+ * [NEEDS YOU] Real quotes only, with permission and correct attribution.
+ *
+ * With no marketplace reviews yet, this is the highest-value thing you can add.
+ * If you have no client quotes, LinkedIn recommendations from ex-colleagues at
+ * Aruba/HPE, EdGE or Trellisys work nearly as well — they speak to how you
+ * engineer, which is what a nervous first-time client is actually worried about.
+ *
+ * I will not write these. An invented quote is the fastest way to lose a client
+ * who checks.
  */
 export const TESTIMONIALS = [
   // { quote: '', name: '', role: '', company: '' },
