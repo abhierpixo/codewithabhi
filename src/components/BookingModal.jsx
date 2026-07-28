@@ -59,7 +59,7 @@ export default function BookingModal({ service, onClose }) {
             <div className="field">
               <label>What would you like to book?</label>
               <select value={f.service} onChange={set('service')}>
-                {['15-min free consultation','Free demo session','Web Development (HTML, CSS, JS)','React Development','Angular Development','1-on-1 training','Career switch guidance','Project support','Something else'].map((o) => <option key={o}>{o}</option>)}
+                {['Project enquiry — build something for me','Project enquiry — take over an existing codebase','Project enquiry — AI / OpenAI integration','15-min free consultation','Free demo session','1-on-1 training','Career switch guidance','Something else'].map((o) => <option key={o}>{o}</option>)}
               </select>
             </div>
             <div className="field"><label>Your name *</label><input value={f.name} onChange={set('name')} placeholder="Full name" required /></div>

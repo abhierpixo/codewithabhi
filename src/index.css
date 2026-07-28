@@ -807,6 +807,69 @@ header h1 .line:nth-child(2){animation-delay:.38s}
 }
 @media(max-width:860px){ .assign-grid{grid-template-columns:1fr} }
 
+/* ===== hire (client landing) ===== */
+.hire .cp-title{max-width:20ch;margin-inline:auto}
+.hire-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:30px}
+.hire-stats{max-width:900px;margin-inline:auto}
+
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+            gap:16px;max-width:1000px;margin:0 auto;text-align:left}
+.proof-card{display:flex;flex-direction:column;gap:7px;padding:20px 22px;
+            background:var(--white);border:1px solid var(--soft);border-radius:14px;
+            text-decoration:none;transition:border-color .25s,transform .25s}
+.proof-card:hover{border-color:var(--green);transform:translateY(-3px)}
+.proof-name{font-weight:700;color:#F1F5F9;font-size:1rem}
+.proof-name i{font-style:normal;color:var(--green)}
+.proof-note{font-size:.86rem;color:#8FA0BC;line-height:1.5}
+
+.svc-proof{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.svc-chip{font-family:var(--mono);font-size:.7rem;color:#8FA0BC;background:var(--panel);
+          border:1px solid var(--soft);border-radius:999px;padding:5px 12px;cursor:pointer;
+          transition:border-color .25s,color .25s}
+.svc-chip:hover{border-color:var(--green);color:var(--green)}
+
+.hire-work{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+           gap:20px;max-width:1100px;margin:0 auto}
+.hire-item{display:flex;flex-direction:column;text-align:left;width:100%;font:inherit;
+           cursor:pointer;background:var(--white);border:1px solid var(--soft);
+           border-radius:16px;overflow:hidden;padding:0;
+           transition:border-color .3s,transform .3s}
+.hire-item:hover{border-color:var(--green);transform:translateY(-4px)}
+.hire-item img{display:block;width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover;
+               border-bottom:1px solid var(--soft)}
+.hi-body{display:flex;flex-direction:column;gap:7px;padding:20px 22px 22px}
+.hi-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+.hi-name{font-family:var(--display);font-weight:700;font-size:1.1rem;color:#F1F5F9}
+.hi-blurb{font-size:.9rem;color:#9FB0C8;line-height:1.55}
+
+.quote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            gap:20px;max-width:1040px;margin:0 auto;text-align:left}
+.quote-card{background:var(--white);border:1px solid var(--soft);border-radius:16px;padding:26px 24px}
+.quote-card p{color:#C3CFE2;font-size:1rem;line-height:1.7;margin-bottom:14px}
+.quote-card p::before{content:'\201C'}.quote-card p::after{content:'\201D'}
+.quote-card footer{font-family:var(--mono);font-size:.76rem;color:#8FA0BC}
+
+.process-grid{list-style:none;max-width:860px;margin:0 auto;text-align:left;display:grid;gap:14px}
+.process-grid li{display:flex;gap:18px;align-items:flex-start;padding:20px 22px;
+                 background:var(--white);border:1px solid var(--soft);border-radius:14px}
+.proc-n{font-family:var(--mono);font-size:.9rem;color:var(--green);flex-shrink:0;padding-top:2px}
+.proc-b{display:flex;flex-direction:column;gap:6px;font-size:.95rem;color:#9FB0C8;line-height:1.6}
+.proc-b b{color:#F1F5F9;font-size:1.02rem}
+
+.engage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+             gap:16px;max-width:1000px;margin:0 auto;text-align:left}
+.engage-grid > div{padding:18px 20px;background:var(--white);
+                   border:1px solid var(--soft);border-radius:13px}
+.engage-grid dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;
+                text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.engage-grid dd{color:#C3CFE2;font-size:.95rem;line-height:1.6}
+
+@media(max-width:640px){
+  .hire-work,.proof-grid,.quote-grid,.engage-grid{grid-template-columns:1fr}
+  .hire-cta{flex-direction:column}
+  .hire-cta .btn{width:100%;text-align:center}
+}
+
 /* ===== work showcase ===== */
 /* kept for document structure and search engines; the thumbnail carries the
    same text visually and in its alt */
