@@ -34,6 +34,13 @@ export default function ProjectDetail({ slug, onBook }) {
       <div className="cp-wrap">
         <BackLink to="work">← All work</BackLink>
         <div className="pd-head">
+          <img
+            className="pd-thumb"
+            src={`/thumbs/${p.slug}.png`}
+            alt={`${p.name} — ${p.tag}`}
+            width="1200"
+            height="630"
+          />
           <p className="cp-eyebrow">{p.tag}</p>
           <h1 className="cp-title">{p.name}</h1>
           <p className="cp-sub">{p.blurb}</p>

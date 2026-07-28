@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "production": "node scripts/build-production-docs.mjs"
+    "production": "node scripts/build-production-docs.mjs",
+    "thumbs": "node scripts/build-thumbnails.mjs"
   },
   "dependencies": {
     "react": "^18.2.0",

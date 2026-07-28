@@ -30,15 +30,20 @@ export default function Work({ onBook }) {
               className={'work-card is-live ' + p.accent}
               onClick={() => go('work/' + p.slug)}
             >
-              <div className="work-top">
-                <span className="work-when">{p.tag}</span>
-                {p.shipped && <span className="work-shipped">Shipped</span>}
-              </div>
-              <h3>{p.name}</h3>
+              {/* the thumbnail already carries the tag, name and stack — repeating
+                  them below made every card say everything twice */}
+              <img
+                className="work-thumb"
+                src={`/thumbs/${p.slug}.png`}
+                alt={`${p.name} — ${p.tag}. Built with ${p.tech.join(', ')}.`}
+                width="1200"
+                height="630"
+                loading="lazy"
+                decoding="async"
+              />
+              <h3 className="sr-only">{p.name}</h3>
+              {p.shipped && <span className="work-shipped">Live on the App Store</span>}
               <p>{p.blurb}</p>
-              <div className="work-tech">
-                {p.tech.map((t) => <i key={t}>{t}</i>)}
-              </div>
               <div className="work-link">Explore project <span aria-hidden="true">→</span></div>
             </button>
           ))}
