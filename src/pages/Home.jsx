@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { HOME_BODY, HOME_SCRIPTS } from '../data/homeContent.js'
 import { CARD_SLUG } from '../data/courses.js'
-import { go } from '../router.js'
+import { go, COURSE_DETAIL_ENABLED } from '../router.js'
 
 /**
  * The rotating tail of the hero headline. The sentence reads
@@ -37,22 +37,26 @@ export default function Home({ onBook }) {
       console.warn('home script init:', e)
     }
 
-    // course cards -> route to the Mosh-style detail pages
-    host.querySelectorAll('.offer[data-course]').forEach((card) => {
-      const slug = CARD_SLUG[card.getAttribute('data-course')]
-      card.style.cursor = 'pointer'
-      const btn = card.querySelector('.btn-offer')
-      if (btn) btn.textContent = 'View course →'
-      card.addEventListener(
-        'click',
-        (e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          if (slug) go('courses/' + slug)
-        },
-        true
-      )
-    })
+    // course cards -> route to the Mosh-style detail pages. While the detail
+    // pages are off, the cards keep the page's own "Book free demo class"
+    // button instead of being hijacked into a navigation.
+    if (COURSE_DETAIL_ENABLED) {
+      host.querySelectorAll('.offer[data-course]').forEach((card) => {
+        const slug = CARD_SLUG[card.getAttribute('data-course')]
+        card.style.cursor = 'pointer'
+        const btn = card.querySelector('.btn-offer')
+        if (btn) btn.textContent = 'View course →'
+        card.addEventListener(
+          'click',
+          (e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (slug) go('courses/' + slug)
+          },
+          true
+        )
+      })
+    }
 
     // data-route links go through the router; the page's own data-target
     // handler only knows how to scroll to an in-page section

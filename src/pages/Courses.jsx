@@ -1,6 +1,6 @@
 import { CATALOG, COURSES } from '../data/courses.js'
 import { seriesTotals } from '../utils.js'
-import { go } from '../router.js'
+import { go, COURSE_DETAIL_ENABLED } from '../router.js'
 import { Play } from '../icons.jsx'
 import BackLink from '../components/BackLink.jsx'
 
@@ -26,7 +26,14 @@ export default function Courses() {
       <section style={{ paddingTop: 40 }}>
         <div className="offers">
           {CATALOG.map((c) => (
-            <div key={c.slug} className={'offer' + (c.soon ? ' is-soon' : '')} style={{ cursor: 'pointer' }} onClick={() => go('courses/' + c.slug)}>
+            /* With the detail pages off the cards are read-only: no pointer, no
+               click, and no CTA that would lead nowhere. */
+            <div
+              key={c.slug}
+              className={'offer' + (c.soon ? ' is-soon' : '')}
+              style={COURSE_DETAIL_ENABLED ? { cursor: 'pointer' } : undefined}
+              onClick={COURSE_DETAIL_ENABLED ? () => go('courses/' + c.slug) : undefined}
+            >
               <div className="offer-head">
                 <div className="glyph"><Play /></div>
                 <span className="c-level">{c.level}</span>
@@ -35,9 +42,11 @@ export default function Courses() {
               <h3>{c.name}</h3>
               <p>{c.desc}</p>
               <span className="cprice">{c.soon ? 'Coming soon' : 'Free preview available'}</span>
-              <button type="button" className="btn-offer" onClick={(e) => { e.stopPropagation(); go('courses/' + c.slug) }}>
-                {c.soon ? 'Preview outline →' : 'View course →'}
-              </button>
+              {COURSE_DETAIL_ENABLED && (
+                <button type="button" className="btn-offer" onClick={(e) => { e.stopPropagation(); go('courses/' + c.slug) }}>
+                  {c.soon ? 'Preview outline →' : 'View course →'}
+                </button>
+              )}
             </div>
           ))}
         </div>
