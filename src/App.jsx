@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useRoute, COURSES_LIVE } from './router.js'
+import { useRoute } from './router.js'
 import Nav from './components/Nav.jsx'
 import BookingModal from './components/BookingModal.jsx'
 import Home from './pages/Home.jsx'
@@ -14,18 +14,19 @@ export default function App() {
   const [booking, setBooking] = useState(null)
   const onBook = (svc) => setBooking(svc || '15-min free consultation')
 
-  // An old /courses link now lands on home, so drop the hash too — otherwise the
-  // address bar keeps advertising a page the visitor isn't looking at.
-  // replaceState leaves no history entry and fires no hashchange.
+  // A flag-disabled course link gets redirected by parseHash, so bring the address
+  // bar along with it — otherwise it keeps advertising a page the visitor isn't
+  // looking at. replaceState leaves no history entry and fires no hashchange.
   useEffect(() => {
-    if (!COURSES_LIVE && /^#\/?courses(\/|$)/.test(window.location.hash)) {
-      history.replaceState(null, '', window.location.pathname + window.location.search)
-    }
+    if (!/^#\/?courses(\/|$)/.test(window.location.hash)) return
+    const bare = window.location.pathname + window.location.search
+    if (route.page === 'home') history.replaceState(null, '', bare)
+    else if (route.page === 'courses') history.replaceState(null, '', '#/courses')
   }, [route])
 
   const isHome = route.page === 'home'
   let page
-  // parseHash() never yields these while COURSES_LIVE is false
+  // parseHash() gates these on COURSES_LIVE / COURSE_DETAIL_ENABLED
   if (route.page === 'courses') page = <Courses />
   else if (route.page === 'course') page = <CourseDetail slug={route.slug} onBook={onBook} />
   else if (route.page === 'hire') page = <Hire onBook={onBook} />
