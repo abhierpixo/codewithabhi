@@ -1,8 +1,18 @@
 import { useState, useEffect } from 'react'
 
+/**
+ * The curriculum is written but the videos aren't produced yet, so the course
+ * pages stay unreachable: the nav entry is hidden, the home cards keep their own
+ * "Book free demo class" buttons, and any /courses hash — bookmarked, shared or
+ * indexed — resolves to home rather than a page selling something we can't
+ * deliver. Flip this to true once the course is ready; nothing else to change.
+ */
+export const COURSES_LIVE = false
+
 export function parseHash() {
   const h = (window.location.hash || '').replace(/^#\/?/, '')
   const parts = h.split('/').filter(Boolean)
+  if (!COURSES_LIVE && parts[0] === 'courses') return { page: 'home' }
   if (parts[0] === 'courses' && parts[1]) return { page: 'course', slug: parts[1] }
   if (parts[0] === 'courses') return { page: 'courses' }
   if (parts[0] === 'hire') return { page: 'hire' }

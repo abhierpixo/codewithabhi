@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { go, useRoute } from '../router.js'
+import { go, useRoute, COURSES_LIVE } from '../router.js'
 
 export default function Nav({ onBook }) {
   const [open, setOpen] = useState(false)
@@ -34,7 +34,9 @@ export default function Nav({ onBook }) {
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav(''))}>Home</a></li>
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('work'))}>What I've built</a></li>
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('hire'))}>Hire me</a></li>
-        <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('courses'))}>All courses</a></li>
+        {COURSES_LIVE && (
+          <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('courses'))}>All courses</a></li>
+        )}
         <li>
           <button type="button" className="nav-cta" onClick={() => { setOpen(false); onBook(ctaService) }}>
             {ctaLabel}
