@@ -34,9 +34,10 @@ export default function Nav({ onBook }) {
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav(''))}>Home</a></li>
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('work'))}>What I've built</a></li>
         <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('hire'))}>Hire me</a></li>
-        {/* Static pages under /js-course/, not a hash route — so a real href, which
-            also gives middle-click and open-in-new-tab for free. Ungated: unlike the
-            catalogue, this course is finished. */}
+        {/* Static pages under /html-course/ and /js-course/, not hash routes — so
+            real hrefs, which also give middle-click and open-in-new-tab for free.
+            Ungated: unlike the catalogue, these courses are finished. */}
+        <li><a className="nav-link" href="/html-course/">HTML course</a></li>
         <li><a className="nav-link" href="/js-course/">JavaScript course</a></li>
         {COURSES_LIVE && (
           <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('courses'))}>All courses</a></li>

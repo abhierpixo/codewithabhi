@@ -59,28 +59,54 @@ export default function Home({ onBook }) {
       });
     }
 
-    // The JavaScript course is finished and ships as static pages under
-    // /js-course/, so it is the one card on this page that leads somewhere real.
-    // Injected rather than baked into HOME_BODY because that markup is a base64
-    // blob ported verbatim. Note the explicit "in": .reveal is opacity:0 until the
-    // scroll observer adds it, and that observer only scans once, before this runs.
+    // The HTML and JavaScript courses are finished and ship as static pages
+    // under /html-course/ and /js-course/, so these are the cards on this page
+    // that lead somewhere real. Injected rather than baked into HOME_BODY
+    // because that markup is a base64 blob ported verbatim. Note the explicit
+    // "in": .reveal is opacity:0 until the scroll observer adds it, and that
+    // observer only scans once, before this runs.
+    // Listed in learning order — HTML is the prerequisite, so it goes first.
+    const FINISHED = [
+      {
+        title: "HTML From Zero",
+        href: "/html-course/",
+        blurb:
+          "46 animated lessons across 10 modules. Build a complete web page from an " +
+          "empty file — structure, links, images, forms, tables and the head — with " +
+          "the markup on one side and the page the browser builds on the other.",
+      },
+      {
+        title: "JavaScript From Zero",
+        href: "/js-course/",
+        blurb:
+          "41 animated lessons across 9 modules. Every lesson is an animation you " +
+          "control — the code on one side, a picture of what the computer is " +
+          "actually doing on the other. Nothing to install, no sign-up.",
+      },
+    ];
     const offers = host.querySelector("#courses .offers");
     if (offers) {
-      const card = document.createElement("div");
-      card.className = "offer featured reveal in";
-      card.style.cssText =
-        "grid-column:1/-1;flex-direction:row;align-items:center;gap:26px;flex-wrap:wrap";
-      card.innerHTML =
-        '<div style="flex:1;min-width:260px">' +
-        '<span class="badge">Live now · Free</span>' +
-        '<h3 style="margin-top:6px">JavaScript From Zero</h3>' +
-        '<p style="margin-bottom:0">41 animated lessons across 9 modules. Every lesson is an ' +
-        "animation you control — the code on one side, a picture of what the computer is " +
-        "actually doing on the other. Nothing to install, no sign-up.</p></div>" +
-        '<a class="btn-offer" href="/js-course/" ' +
-        'style="width:auto;padding:14px 30px;text-decoration:none;text-align:center">' +
-        "Start learning →</a>";
-      offers.prepend(card);
+      const cards = FINISHED.map((c) => {
+        const card = document.createElement("div");
+        card.className = "offer featured reveal in";
+        card.style.cssText =
+          "grid-column:1/-1;flex-direction:row;align-items:center;gap:26px;flex-wrap:wrap";
+        card.innerHTML =
+          '<div style="flex:1;min-width:260px">' +
+          '<span class="badge">Live now · Free</span>' +
+          '<h3 style="margin-top:6px">' +
+          c.title +
+          "</h3>" +
+          '<p style="margin-bottom:0">' +
+          c.blurb +
+          "</p></div>" +
+          '<a class="btn-offer" href="' +
+          c.href +
+          '" style="width:auto;padding:14px 30px;text-decoration:none;text-align:center">' +
+          "Start learning →</a>";
+        return card;
+      });
+      offers.prepend(...cards);
     }
 
     // data-route links go through the router; the page's own data-target

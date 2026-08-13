@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML From Zero — All Lessons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--void:#1E1832;--slab:#2A2247;--slab-2:#332A55;--edge:#453A6B;--chalk:#EDE7FA;--dim:#9B90BC;
+    --amber:#FFC15E;--rose:#FF6392;--peri:#8B8CF0;--go:#7FD9A6;--ease:cubic-bezier(.22,1,.36,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--chalk);font-family:"Newsreader",Georgia,serif;font-size:17px;
+    line-height:1.55;padding:clamp(24px,5vw,72px) clamp(16px,4vw,56px) 90px;
+    background-image:radial-gradient(circle at 12% 0%,rgba(139,140,240,.17),transparent 55%),
+                     radial-gradient(circle at 92% 8%,rgba(255,193,94,.1),transparent 50%);
+    background-attachment:fixed}
+  .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--peri)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,7vw,72px);
+    line-height:.96;letter-spacing:-.035em;margin:16px 0 18px;max-width:14ch}
+  h1 em{font-style:normal;color:var(--amber)}
+  .lede{max-width:58ch;color:#CFC5E8;font-size:clamp(17px,2vw,20px)}
+  .stats{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
+  .stat{border:1px solid var(--edge);border-radius:12px;background:var(--slab);padding:11px 15px}
+  .stat b{font-family:"Bricolage Grotesque",sans-serif;font-size:21px;display:block;color:var(--amber)}
+  .stat span{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim)}
+  .howto{margin-top:34px;border:1px solid var(--edge);border-left:3px solid var(--go);
+    border-radius:0 13px 13px 0;background:var(--slab);padding:16px 20px;max-width:64ch}
+  .howto h3{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;margin-bottom:6px}
+  .howto p{font-size:15.5px;color:#CFC5E8}
+  .mod{margin-top:46px}
+  .modhead{border-bottom:1px solid var(--edge);padding-bottom:13px;margin-bottom:16px;position:relative}
+  .modhead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(21px,3vw,29px);letter-spacing:-.02em}
+  .modhead p{color:var(--dim);font-size:15px;margin-top:5px;max-width:62ch}
+  .modcount{position:absolute;right:0;top:2px;font-family:"JetBrains Mono",monospace;font-size:10px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  @media(max-width:600px){.modcount{display:none}}
+  .lcards{display:flex;flex-direction:column;gap:9px}
+  .lcard{display:flex;gap:15px;align-items:center;text-decoration:none;padding:14px 17px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lcard:hover{border-color:var(--amber);background:var(--slab-2);transform:translateX(3px)}
+  .lcard:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnum{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--dim);background:var(--void);
+    border:1px solid var(--edge);border-radius:9px;width:34px;height:34px;display:grid;
+    place-items:center;flex:0 0 auto}
+  .lcard:hover .lnum{color:var(--amber);border-color:var(--amber)}
+  .lbody{flex:1;min-width:0}
+  .lt{font-family:"Bricolage Grotesque",sans-serif;font-size:16px;color:var(--chalk);display:block;
+    line-height:1.25}
+  .lb{font-size:13.5px;color:var(--dim);display:block;margin-top:3px;line-height:1.4}
+  .lsteps{font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--dim);text-align:right;
+    flex:0 0 auto;line-height:1.1}
+  .lsteps em{display:block;font-style:normal;font-size:8.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#584B7F;margin-top:2px}
+  @media(max-width:520px){.lsteps{display:none}}
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--edge);color:var(--dim);
+    font-size:14.5px;max-width:62ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">An animated course for complete beginners</p>
+  <h1>HTML <em>From Zero</em></h1>
+  <p class="lede">Every lesson is an animation you control. Code on the left, a picture of what the
+  computer is actually doing on the right, and one plain sentence explaining each step. No prior
+  coding experience assumed, and nothing to install.</p>
+
+  <div class="stats">
+    <div class="stat"><b>46</b><span>lessons</span></div>
+    <div class="stat"><b>10</b><span>modules</span></div>
+    <div class="stat"><b>633</b><span>animated steps</span></div>
+    <div class="stat"><b>~11h</b><span>with practice</span></div>
+  </div>
+
+  <div class="howto">
+    <h3>How to actually use this</h3>
+    <p>Watch each lesson once at normal speed to see its shape. Then step through it manually a second
+    time and try to predict what happens <em>before</em> pressing the button. Predicting is what turns
+    watching into knowing. Use the scrubber to jump back to any moment.</p>
+  </div>
+
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 1 · Getting Started</h2>
+          <p>What a web page actually is, how to read a tag, and the skeleton every page shares.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m1-lesson-1-what-a-web-page-is.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">A web page is a text file</span>
+          <span class="lb">Before the first tag, it helps enormously to know what you are writing and what the other two languages do. Watch a file of plain characters…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-2-anatomy-of-a-tag.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">One element, taken apart</span>
+          <span class="lb">Almost every HTML error a beginner makes is a tag problem — unclosed, mismatched, or misspelled. Knowing exactly what the parts are turns those…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-3-the-page-skeleton.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">The skeleton every page has</span>
+          <span class="lb">Four lines that appear at the top of every page on the internet, usually copied without explanation. Here they are built one at a time — including…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 2 · How Tags Nest</h2>
+          <p>The invisible tree your tags build — and what the browser does when you get it wrong.</p>
+          <span class="modcount">6 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m2-lesson-1-page-is-a-tree.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">The structure you cannot see</span>
+          <span class="lb">Your tags build a tree, and that tree is what CSS selects, what JavaScript walks, and what a screen reader reads. It is also completely invisible…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-2-nesting.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Boxes inside boxes, never crossing over</span>
+          <span class="lb">Crossed tags produce a page that looks completely fine and a tree that is quietly wrong. Here are both trees, side by side, from two lines that…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-3-block-and-inline.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Why some elements stack and others do not</span>
+          <span class="lb">Every element behaves one of two ways, and the rule that follows from it explains most mangled trees: inline elements may only contain inline…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-4-div-and-span.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">The two boxes that mean nothing</span>
+          <span class="lb">The two most-used elements on the web carry no meaning at all. That is not a flaw — it is their job. The skill is knowing when nothing meaningful…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-5-browser-repairs.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Broken HTML still works — and that is the danger</span>
+          <span class="lb">Leave out a closing tag and there is no error. The browser repairs your markup silently and builds a tree you never asked for. Here is the tree…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-6-attributes.html">
+          <span class="lnum">6</span>
+          <span class="lbody"><span class="lt">Attributes: the settings on a tag</span>
+          <span class="lb">A tag name says what an element is. An attribute configures this particular one. Four parts, one shape, and it never varies — which makes…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 3 · Text That Means Something</h2>
+          <p>Marking up text so its meaning is clear, not merely its appearance.</p>
+          <span class="modcount">6 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m3-lesson-1-headings.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Headings are an outline, not font sizes</span>
+          <span class="lb">Headings look like a way to make text big. They are actually a contents page, and choosing them by size quietly breaks navigation for anyone using…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-2-whitespace.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Why your text will not move down</span>
+          <span class="lb">Press Enter fifty times and the browser shows one space. Every run of whitespace in your file collapses to a single space — so spacing comes from…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-3-lists.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Anything that is a set of things</span>
+          <span class="lb">Three kinds of list, one strict nesting rule, and a real payoff: use the right element and assistive technology announces how many items there are…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-4-emphasis.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Two tags that look identical, and are not</span>
+          <span class="lb">strong and b both make text bold. em and i both make it italic. The difference is entirely invisible on screen — and entirely audible to somebody…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-5-semantic-text.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Use the specific element, not the generic one</span>
+          <span class="lb">A short tour of elements most courses skip: quotes, dates, keys, code, abbreviations. Each is tiny. The habit behind them — reach for the specific…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-6-comments-and-entities.html">
+          <span class="lnum">6</span>
+          <span class="lbody"><span class="lt">Writing characters HTML would otherwise eat</span>
+          <span class="lb">How do you write an ampersand? How do you show a tag on a page without the browser building it? Every learner hits this the first time they write…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 4 · Links</h2>
+          <p>The element that makes the web a web, and the paths that keep breaking.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m4-lesson-1-the-anchor.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">The element that makes the web a web</span>
+          <span class="lb">One element, one attribute, and the entire connective tissue of the internet. Including the two link types that matter far more on a phone than on…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-2-paths.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Pointing at a file, and actually hitting it</span>
+          <span class="lb">“It works on my computer but not on the internet” is almost always a path problem, and almost always one of three specific mistakes. Here is the…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-3-page-anchors.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Jumping to a section, not a page</span>
+          <span class="lb">Give an element a name, then link to that name with a hash. Two halves, no JavaScript, and it is how every documentation site and long article on…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-4-link-text.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Links that make sense on their own</span>
+          <span class="lb">“Click here” is called bad practice constantly and explained rarely. The reason is concrete: many people never read your link inside its sentence…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-5-link-or-button.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">A link goes somewhere. A button does something.</span>
+          <span class="lb">Both are clickable and both look identical once styled, so getting it wrong is invisible — until somebody tries to use a keyboard. Here is the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 5 · Images and Media</h2>
+          <p>Media that loads fast, holds its space, and works for people who cannot see it.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m5-lesson-1-images-and-alt.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Images, and the text underneath them</span>
+          <span class="lb">An image element does not contain a picture — it points at one, which is fetched separately. And alt, the most skipped attribute on the web, is…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-2-size-and-layout-shift.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Stop your page jumping around</span>
+          <span class="lb">The page leaps down as images arrive because the browser did not know how big they would be. Two attributes fix it completely — watch the same…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-3-responsive-images.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Offer several images, let the browser choose</span>
+          <span class="lb">Sending a desktop photo to a phone wastes most of the file and a chunk of somebody's data plan. You offer a menu of versions; the browser picks,…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-4-video-audio-embeds.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Media, and other people’s pages</span>
+          <span class="lb">Three elements, each with one attribute people routinely forget. Embedding is also where beginners paste code they have never read — so we go…</span></span>
+          <span class="lsteps">17<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 6 · Structure and Accessibility</h2>
+          <p>The difference between a beginner’s page and a professional one.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m6-lesson-1-div-is-not-structure.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">div means nothing at all</span>
+          <span class="lb">A page built entirely from divs looks perfect and communicates nothing. Here is the same page twice — pixel for pixel identical, and one of them…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-2-landmarks.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Four elements that name the page’s regions</span>
+          <span class="lb">Header, nav, main, footer. Four tags, and a keyboard user goes from tabbing past thirty navigation links on every single page to reaching the…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-3-section-article-aside.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Structuring inside the main content</span>
+          <span class="lb">The difference between section and article confuses everybody, so this lesson uses one test repeatedly: could this piece stand completely on its…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-4-figure-and-details.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Two elements that replace code</span>
+          <span class="lb">figure formally ties a caption to what it describes. details gives you a working accordion with no JavaScript at all — keyboard accessible,…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-5-accessibility-tree.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">The second model of your page</span>
+          <span class="lb">The browser builds an accessibility tree from your HTML, and it is not the same shape as the one you wrote. Watch it form, then watch four…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 7 · Forms</h2>
+          <p>Collecting something from another person — and the attribute without which nothing arrives.</p>
+          <span class="modcount">6 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m7-lesson-1-what-a-form-does.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Gathering what somebody typed, and sending it</span>
+          <span class="lb">Beginners build forms that look right and collect nothing. Watching the data package assemble as each field is filled makes the missing pieces…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-2-the-name-attribute.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Without name, nothing arrives</span>
+          <span class="lb">A field with no name looks perfect, accepts typing, validates, and sends absolutely nothing. No error, no warning. It is the most common…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-3-labels.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Connecting the words to the box</span>
+          <span class="lb">Text beside an input is not a label — it only looks like one. A real label is connected, and that connection is what makes a field announce…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-4-input-types.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Ask for the right kind of thing</span>
+          <span class="lb">One attribute changes what an input accepts, how it validates, and which keyboard a phone shows. It is the cheapest improvement in the whole…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-5-choices.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Offering options instead of free text</span>
+          <span class="lb">“Why can I select all three radio buttons?” is a rite of passage, and the answer is always the same attribute. Three controls, one grouping rule,…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-6-validation.html">
+          <span class="lnum">6</span>
+          <span class="lbody"><span class="lt">Catching bad input with no code at all</span>
+          <span class="lb">Six attributes block bad input, show a message, and announce the problem to a screen reader — with no JavaScript. They are also trivially…</span></span>
+          <span class="lsteps">17<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 8 · Tables</h2>
+          <p>Data in rows and columns, and the one attribute that makes it readable aloud.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m8-lesson-1-tables-are-for-data.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Rows, columns, and when not to use one</span>
+          <span class="lb">Three elements in a fixed order, the deepest tree in the course, and one decision that matters more than the syntax: a table is for data, never…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-2-headers-and-captions.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Making a table readable without seeing it</span>
+          <span class="lb">A table without headers read aloud is a stream of unlabelled values. With them, every cell arrives with its row and column attached. Same data,…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-3-bigger-tables.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Merged cells, and when to stop</span>
+          <span class="lb">Two attributes let a cell absorb its neighbours, and the grid breaks silently when the numbers do not add up. Plus the question worth asking…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 9 · The Head</h2>
+          <p>Everything nobody sees: search results, shared links, and the other two languages.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m9-lesson-1-the-invisible-half.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Everything nobody sees</span>
+          <span class="lb">The head contains nothing a visitor reads, and every line in it changes something you care about — how you appear in search, whether phones can…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-2-encoding-and-viewport.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Two lines that prevent two disasters</span>
+          <span class="lb">Miss the first and your rupee signs turn to rubbish. Miss the second and phones shrink your page until nobody can read it. Both are one line, and…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-3-title-and-description.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">How your page appears in Google</span>
+          <span class="lb">Two lines in the head are the entire visible surface of your page in search results. Watch the result preview change as you write them — and see…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-4-social-previews.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">The card people see when your link is shared</span>
+          <span class="lb">Paste a link somewhere and you get either a bare blue address or a card with a picture, a headline and a line of text. The difference is four tags…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-5-connecting-css-and-js.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Joining the other two languages</span>
+          <span class="lb">The course opened by naming three languages and has never said how to attach two of them. It also explains the most-searched error in web…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 10 · Putting It Together</h2>
+          <p>What a web page actually is, how to read a tag, and the skeleton every page shares.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m10-lesson-1-finding-what-is-wrong.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Debugging HTML that never complains</span>
+          <span class="lb">Because HTML fails silently, the ability to inspect what actually happened is the whole skill. Three tools you already have, run on a page with…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m10-lesson-2-a-complete-page.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Everything, in one page</span>
+          <span class="lb">No new elements. A full page assembled from all ten modules, then an honest look at the boundary — what HTML deliberately does not do, and why CSS…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m10-lesson-3-which-element.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">The question you will ask every single day</span>
+          <span class="lb">No new tags. A walk through a real page's worth of content with the reasoning spoken out loud each time, resolving to one four-step ladder you…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+
+  <footer>
+    Ten modules, in order. HTML alone will never make a page beautiful &mdash; that is CSS&rsquo;s job,
+    and it is the very next thing to learn.
+  </footer>
+</div>
+</body>
+</html>
