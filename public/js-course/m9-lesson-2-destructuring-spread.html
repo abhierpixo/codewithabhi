@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 9.2 — Unpacking and Spreading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#1E1832; --slab:#2A2247; --slab-2:#332A55; --edge:#453A6B;
+    --chalk:#EDE7FA; --dim:#9B90BC;
+    --amber:#FFC15E; --rose:#FF6392; --peri:#8B8CF0; --go:#7FD9A6;
+    --accent:#8B8CF0; --ink:#1A1633;
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--void);color:var(--chalk);font-family:"Newsreader",Georgia,serif;
+       font-size:17px;line-height:1.55;padding:clamp(20px,4vw,56px) clamp(16px,4vw,56px) 150px;
+       background-image:radial-gradient(circle at 15% 0%,rgba(139,140,240,.16),transparent 55%),
+                        radial-gradient(circle at 90% 10%,rgba(255,193,94,.09),transparent 50%);
+       background-attachment:fixed}
+  .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
+           text-transform:uppercase;color:var(--peri);display:flex;gap:10px;flex-wrap:wrap}
+  .eyebrow span{color:var(--dim)}
+  h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;
+     font-size:clamp(29px,5.2vw,56px);line-height:1;letter-spacing:-.03em;margin:14px 0 16px;max-width:17ch}
+  h1 em{font-style:normal;color:var(--accent)}
+  .thesis{max-width:58ch;color:#CFC5E8;font-size:clamp(16.5px,2vw,20px)}
+  .board{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;
+         margin-top:clamp(28px,4vw,48px);align-items:start}
+  @media(max-width:900px){.board{grid-template-columns:1fr}}
+  .panel,.zone{background:var(--slab);border:1px solid var(--edge);border-radius:16px;padding:18px}
+  .cap{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+       color:var(--dim);display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+  .hint{font-size:12.5px;color:var(--dim);margin-top:12px;line-height:1.45}
+
+  pre.code{font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.9;overflow-x:auto;min-height:60px}
+  .ln{display:block;padding:1px 8px 1px 38px;position:relative;border-radius:6px;color:#B7ABD8;
+      transition:background 400ms var(--ease),color 220ms}
+  .ln::before{content:attr(data-n);position:absolute;left:8px;color:#584B7F;font-size:11px}
+  .ln.on{background:rgba(255,193,94,.15);color:var(--chalk);box-shadow:inset 2px 0 0 var(--amber)}
+  .ln.bad{background:rgba(255,99,146,.16);color:var(--chalk);box-shadow:inset 2px 0 0 var(--rose)}
+  .ln.dim{opacity:.4}
+  .k{color:var(--peri)}.f{color:var(--amber)}.s{color:var(--go)}.n{color:var(--rose)}.c{color:#6E6094}
+
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  button{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:500;font-size:14px;
+         color:var(--chalk);background:var(--slab-2);border:1px solid var(--edge);border-radius:10px;
+         padding:9px 15px;cursor:pointer;transition:transform 120ms var(--ease),background 160ms,border-color 160ms}
+  button:hover:not(:disabled){background:#3E3466;border-color:var(--peri)}
+  button:active:not(:disabled){transform:translateY(1px)}
+  button:disabled{opacity:.32;cursor:not-allowed}
+  button.primary{background:var(--accent);color:var(--ink);border-color:var(--accent);font-weight:800}
+  button.primary:hover{filter:brightness(1.12)}
+  button:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .speed{display:flex;gap:4px;margin-left:auto;background:var(--void);border:1px solid var(--edge);
+         border-radius:10px;padding:3px}
+  .speed button{padding:5px 10px;font-size:12px;border:0;background:transparent;border-radius:7px}
+  .speed button[aria-pressed="true"]{background:var(--peri);color:#1E1832;font-weight:800}
+  .scrub{display:flex;align-items:center;gap:12px;margin-top:14px}
+  .scrub input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:22px;background:transparent;cursor:pointer;margin:0}
+  .scrub input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .scrub input[type=range]::-moz-range-track{height:6px;border-radius:3px;
+    background:linear-gradient(90deg,var(--accent) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .scrub input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--chalk);border:2px solid var(--void);margin-top:-5px;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+  .scrub input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;
+    background:var(--chalk);border:2px solid var(--void)}
+  .scrub input[type=range]:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .scrub .stepn{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--dim);flex:0 0 auto;
+    min-width:78px;text-align:right}
+  .keys{font-family:"JetBrains Mono",monospace;font-size:10px;color:#584B7F;margin-top:9px;letter-spacing:.04em}
+  .keys b{color:var(--dim);font-weight:400;background:var(--slab-2);border:1px solid var(--edge);
+    border-radius:4px;padding:1px 5px;margin:0 1px}
+
+  .console{margin-top:20px;min-height:126px}
+  .out{font-family:"JetBrains Mono",monospace;font-size:13px;display:flex;flex-direction:column;gap:6px}
+  .out div{animation:printIn 320ms var(--ease) both;display:flex;gap:9px;align-items:baseline;color:var(--go)}
+  .out div span{color:#584B7F;flex:0 0 auto}
+  .out div.num{color:var(--rose)}
+  .out div.err{color:var(--rose);background:rgba(255,99,146,.09);border-left:2px solid var(--rose);
+       padding:7px 9px;border-radius:0 6px 6px 0;line-height:1.5}
+  .out .empty{color:#584B7F;font-style:italic}
+  @keyframes printIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+
+  .machine{display:flex;flex-direction:column;gap:14px}
+  .zone{transition:border-color 300ms,box-shadow 300ms}
+  .zone.hot{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.13)}
+
+  /* memory shelf */
+  .shelf{display:flex;gap:11px;flex-wrap:wrap;min-height:86px;align-items:flex-start}
+  .box{background:var(--slab-2);border:1px solid var(--edge);border-radius:12px;min-width:106px;
+       overflow:hidden;animation:boxIn 360ms var(--ease) both}
+  @keyframes boxIn{from{opacity:0;transform:translateY(9px) scale(.94)}to{opacity:1;transform:none}}
+  .box .name{font-family:"JetBrains Mono",monospace;font-size:11px;padding:6px 10px;
+       border-bottom:1px solid var(--edge);color:var(--chalk);background:rgba(0,0,0,.16);
+       display:flex;justify-content:space-between;gap:8px}
+  .box .name em{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .box .val{font-family:"JetBrains Mono",monospace;font-size:15px;padding:11px 10px;text-align:center;color:var(--chalk)}
+  .box[data-t="number"] .val{color:var(--rose)}
+  .box[data-t="string"] .val{color:var(--go)}
+  .box[data-t="boolean"] .val{color:var(--peri)}
+  .box[data-t="empty"] .val{color:#7A6CA6;font-style:italic}
+  .box[data-lock="1"]{border-color:#5C4E86}
+  .box[data-lock="1"] .name em{color:var(--peri)}
+  .box.pulse{animation:pulse 620ms var(--ease)}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,193,94,.55)}100%{box-shadow:0 0 0 14px rgba(255,193,94,0)}}
+  .box.pulse .val{color:var(--amber)}
+  .box.shake{animation:shake 420ms both;border-color:var(--rose)}
+  .box.shake .val{color:var(--rose)}
+  @keyframes shake{10%,90%{transform:translateX(-3px)}30%,70%{transform:translateX(5px)}50%{transform:translateX(-5px)}}
+
+  /* workbench */
+  .bench{min-height:96px;display:flex;flex-direction:column;justify-content:center;align-items:center;
+         gap:9px;text-align:center;padding:4px 0}
+  .expr{font-family:"JetBrains Mono",monospace;font-size:clamp(17px,3.2vw,26px);color:var(--chalk);letter-spacing:-.01em}
+  .expr.flip{animation:exprIn 380ms var(--ease)}
+  @keyframes exprIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .bench .sub{font-size:13px;color:var(--dim);max-width:44ch;line-height:1.4}
+  .bench .idle{font-size:14px;color:#584B7F;font-style:italic}
+
+  /* gate */
+  .gate{display:flex;flex-direction:column;align-items:center;gap:11px;min-height:110px;justify-content:center}
+  .gate .q{font-family:"JetBrains Mono",monospace;font-size:clamp(17px,3.2vw,26px);letter-spacing:-.01em}
+  .gate .q.flip{animation:exprIn 360ms var(--ease)}
+  .verdict{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:12.5px;letter-spacing:.15em;
+           text-transform:uppercase;padding:7px 15px;border-radius:999px;animation:exprIn 360ms var(--ease)}
+  .verdict.t{background:var(--go);color:#12301F}
+  .verdict.f{background:var(--rose);color:#3B0A1C}
+  .gate .idle{color:#584B7F;font-style:italic;font-size:14px}
+  .door{width:100%;height:6px;border-radius:3px;background:var(--edge);position:relative;overflow:hidden;margin-top:4px}
+  .door::after{content:"";position:absolute;inset:0;background:var(--go);transform:scaleX(0);
+               transform-origin:left;transition:transform 460ms var(--ease)}
+  .door.open::after{transform:scaleX(1)}
+  .door.shut::after{background:var(--rose);transform:scaleX(1)}
+
+  /* pips */
+  .piprow{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+  .piprow:last-child{margin-bottom:0}
+  .piprow .lab{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+       text-transform:uppercase;color:var(--dim);min-width:44px}
+  .pip{width:32px;height:32px;border-radius:9px;border:1px solid var(--edge);display:grid;place-items:center;
+       font-family:"JetBrains Mono",monospace;font-size:12px;color:#584B7F;transition:all 300ms var(--ease)}
+  .pip.done{background:var(--slab-2);color:var(--dim)}
+  .pip.now{background:var(--amber);color:#241B33;border-color:var(--amber);font-weight:700;transform:scale(1.12)}
+
+  /* branch */
+  .branch{display:flex;flex-direction:column;gap:8px}
+  .path{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:11px;
+        border:1px solid var(--edge);background:var(--slab-2);opacity:.34;transition:all 380ms var(--ease)}
+  .path .tag{font-family:"JetBrains Mono",monospace;font-size:10.5px;padding:4px 8px;border-radius:6px;
+        background:var(--void);color:var(--dim);flex:0 0 auto}
+  .path b{font-family:"JetBrains Mono",monospace;font-weight:400;font-size:13px;display:block;color:var(--chalk)}
+  .path i{font-style:normal;font-size:12.5px;color:var(--dim);display:block;line-height:1.4;margin-top:3px}
+  .path.tested{opacity:1;border-color:var(--rose)}
+  .path.tested .tag{background:var(--rose);color:#3B0A1C}
+  .path.live{opacity:1;border-color:var(--go);transform:translateX(4px)}
+  .path.live .tag{background:var(--go);color:#12301F;font-weight:700}
+  .path.skipped{opacity:.34;border-style:dashed}
+
+  /* buckets */
+  .buckets{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:150px}
+  .bucket{border:1px solid var(--edge);border-radius:12px;padding:12px;background:var(--slab-2)}
+  .bucket h4{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+       font-weight:400;margin-bottom:10px;text-align:center}
+  .bucket[data-w="t"]{border-color:rgba(127,217,166,.45)} .bucket[data-w="t"] h4{color:var(--go)}
+  .bucket[data-w="f"]{border-color:rgba(255,99,146,.42)} .bucket[data-w="f"] h4{color:var(--rose)}
+  .bucket .items{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .chip{font-family:"JetBrains Mono",monospace;font-size:12px;padding:5px 9px;border-radius:7px;
+        background:var(--void);border:1px solid var(--edge);color:var(--dim);
+        animation:boxIn 320ms var(--ease) both}
+  .chip.fresh{color:var(--chalk);border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.15)}
+  .drop{text-align:center;font-family:"JetBrains Mono",monospace;font-size:clamp(16px,3vw,22px);
+        color:var(--chalk);padding:6px 0 12px}
+  .drop.flip{animation:exprIn 340ms var(--ease)}
+  .drop .idle{color:#584B7F;font-style:italic;font-size:14px;font-family:"Newsreader",serif}
+
+  .narrate{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(30,24,50,.94);
+           backdrop-filter:blur(14px);border-top:1px solid var(--edge);padding:16px clamp(16px,4vw,56px)}
+  .narrate-in{max-width:1180px;margin:0 auto;display:flex;gap:18px;align-items:center}
+  .tick{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink);background:var(--accent);
+        border-radius:6px;padding:5px 8px;flex:0 0 auto;font-weight:700}
+  #note{font-size:clamp(15px,2vw,18px);line-height:1.45;max-width:78ch}
+  #note code{font-family:"JetBrains Mono",monospace;font-size:.86em;background:var(--slab-2);
+             padding:2px 5px;border-radius:5px;color:var(--amber)}
+  #note.flip{animation:noteIn 380ms var(--ease)}
+  @keyframes noteIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* numbered array slots */
+  .arow{margin-bottom:13px}
+  .arow:last-child{margin-bottom:0}
+  .arlab{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+         color:var(--dim);margin-bottom:7px;display:block}
+  .slots2{display:flex;gap:7px;flex-wrap:wrap;align-items:flex-start;min-height:52px}
+  .slot{min-width:54px;border:1px solid var(--edge);border-radius:10px;background:var(--slab-2);
+        overflow:hidden;text-align:center;animation:boxIn 320ms var(--ease) both;transition:opacity 300ms}
+  .slot .ix{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#6C5F97;
+        background:rgba(0,0,0,.22);padding:3px 6px;border-bottom:1px solid var(--edge)}
+  .slot .vv{font-family:"JetBrains Mono",monospace;font-size:13px;padding:9px;color:var(--chalk)}
+  .slot.now{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.15)}
+  .slot.now .vv{color:var(--amber)}
+  .slot.kept{border-color:var(--go)} .slot.kept .vv{color:var(--go)}
+  .slot.made{border-color:var(--peri)} .slot.made .vv{color:var(--peri)}
+  .slot.dropped,.slot.gone{opacity:.26;border-style:dashed}
+  .slot.wide{min-width:136px} .slot.wide .vv{font-size:11.5px;line-height:1.45}
+
+  /* object cabinets */
+  .cab{display:flex;gap:12px;flex-wrap:wrap;min-height:96px}
+  .cabinet{border:1px solid var(--edge);border-radius:12px;background:var(--slab-2);min-width:172px;
+           overflow:hidden;animation:boxIn 320ms var(--ease) both}
+  .cabinet .ct{font-family:"JetBrains Mono",monospace;font-size:11px;padding:7px 10px;
+        background:rgba(0,0,0,.2);border-bottom:1px solid var(--edge);color:var(--chalk);
+        display:flex;justify-content:space-between;gap:10px}
+  .cabinet .ct em{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .drawer{display:flex;justify-content:space-between;gap:14px;padding:8px 10px;
+        border-bottom:1px solid rgba(69,58,107,.55);font-family:"JetBrains Mono",monospace;font-size:12px}
+  .drawer:last-child{border-bottom:0}
+  .drawer .dk{color:var(--dim)} .drawer .dv{color:var(--go)}
+  .drawer.now{background:rgba(255,193,94,.14)}
+  .drawer.now .dv{color:var(--amber)} .drawer.now .dk{color:var(--chalk)}
+  .drawer.miss .dv{color:var(--rose)}
+
+  /* nested scope rooms */
+  .room{border:1px solid var(--edge);border-radius:12px;padding:12px;background:rgba(51,42,85,.45);
+        transition:all 360ms var(--ease)}
+  .room.nest{margin:10px 0 0 18px}
+  .room.active{border-color:var(--peri);box-shadow:0 0 0 3px rgba(139,140,240,.13)}
+  .room.gone{opacity:.26;border-style:dashed}
+  .room .rt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--dim);margin-bottom:9px;display:flex;
+        justify-content:space-between;gap:10px}
+  .room .vars{display:flex;gap:6px;flex-wrap:wrap}
+  .rvar{font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:4px 9px;border-radius:7px;
+        background:var(--void);border:1px solid var(--edge);color:var(--chalk)}
+  .rvar.hit{border-color:var(--go);color:var(--go);box-shadow:0 0 0 3px rgba(127,217,166,.13)}
+  .rvar.none{color:#584B7F;font-style:italic;border-style:dashed}
+  .room .look{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--amber);margin-top:9px}
+  /* DOM tree */
+  .tree{font-family:"JetBrains Mono",monospace;font-size:12.5px;display:flex;flex-direction:column;
+        gap:3px;min-height:150px}
+  .tnode{padding:5px 9px;border-radius:7px;border:1px solid transparent;color:#8E80B8;
+         transition:all 320ms var(--ease);display:flex;gap:9px;align-items:baseline}
+  .tnode.new{animation:boxIn 300ms var(--ease) both}
+  .tnode .tg{color:var(--peri)}
+  .tnode .tx{color:var(--dim);font-size:11.5px}
+  .tnode.lit{background:rgba(255,193,94,.14);border-color:var(--amber);color:var(--chalk)}
+  .tnode.lit .tg{color:var(--amber)}
+  .tnode.found{background:rgba(127,217,166,.12);border-color:var(--go);color:var(--chalk)}
+  .tnode.found .tg{color:var(--go)}
+  .tnode.miss{border-color:var(--rose);color:var(--rose)}
+  .tnode.faded{opacity:.32}
+
+  /* live page preview */
+  .browser{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:#0F0C1C}
+  .bbar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--slab-2);
+        border-bottom:1px solid var(--edge)}
+  .bdot{width:9px;height:9px;border-radius:50%;background:var(--edge)}
+  .burl{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--dim);background:var(--void);
+        border-radius:6px;padding:4px 10px;margin-left:8px;flex:1}
+  .view{padding:22px 20px;min-height:168px;display:flex;flex-direction:column;
+        align-items:flex-start;gap:12px;transition:background 450ms var(--ease)}
+  .view.dark{background:linear-gradient(160deg,#241E3F,#131020)}
+  .view h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:22px;color:#fff;
+           letter-spacing:-.02em;transition:all 350ms var(--ease);border-radius:5px}
+  .view h3.big{font-size:31px}
+  .view h3.flash{animation:flash 800ms var(--ease)}
+  @keyframes flash{0%{background:rgba(255,193,94,.45)}100%{background:transparent}}
+  .pbtn{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;background:var(--go);color:#12301F;
+        border:0;border-radius:999px;padding:9px 18px;font-size:13.5px}
+  .pbtn.dead{background:#5A5470;color:#BDB6CF}
+  .pbtn.hit{animation:hit 400ms var(--ease)}
+  @keyframes hit{50%{transform:scale(.88)}}
+  .plist{display:flex;flex-direction:column;gap:6px;width:100%}
+  .pitem{font-family:"Bricolage Grotesque",sans-serif;font-size:13.5px;background:rgba(255,255,255,.07);
+         border-radius:8px;padding:8px 11px;color:#E4DDF5;display:flex;justify-content:space-between;gap:10px}
+  .pitem.new{animation:boxIn 320ms var(--ease) both}
+  .pitem.done{text-decoration:line-through;opacity:.48}
+  .pitem.gone{opacity:.18}
+  .pnote{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--rose)}
+  .pblank{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:#3D3358}
+
+  /* async bays */
+  .bay{margin-bottom:11px}
+  .bay:last-child{margin-bottom:0}
+  .baylab{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+          color:var(--dim);display:flex;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .baybox{border:1px solid var(--edge);border-radius:11px;background:var(--slab-2);min-height:46px;
+          padding:8px;display:flex;gap:7px;flex-wrap:wrap;align-items:center;transition:all 320ms var(--ease)}
+  .baybox.col{flex-direction:column-reverse;align-items:stretch}
+  .bay.hot .baybox{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.13)}
+  .bchip{font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:6px 10px;border-radius:8px;
+         background:var(--void);border:1px solid var(--edge);border-left:3px solid var(--dim);
+         color:var(--chalk);animation:boxIn 300ms var(--ease) both}
+  .bchip[data-k="sync"]{border-left-color:var(--amber);color:var(--amber)}
+  .bchip[data-k="timer"]{border-left-color:var(--peri);color:var(--peri)}
+  .bchip[data-k="promise"]{border-left-color:var(--rose);color:var(--rose)}
+  .bchip[data-k="root"]{border-left-color:var(--chalk)}
+  .bempty{font-size:11.5px;color:#584B7F;font-style:italic;padding-left:2px}
+  .pfield{width:100%;font-family:"Bricolage Grotesque",sans-serif;font-size:13.5px;
+          background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:8px;
+          padding:9px 11px;color:#E4DDF5;min-height:38px;transition:border-color 300ms var(--ease)}
+  .pfield.ghost{color:#8177A0;font-style:italic}
+  .pfield.focus{border-color:var(--go);box-shadow:0 0 0 3px rgba(127,217,166,.14)}
+  .pfield.bad{border-color:var(--rose);box-shadow:0 0 0 3px rgba(255,99,146,.14)}
+  @media(prefers-reduced-motion:reduce){*,*::after{animation-duration:1ms!important;transition-duration:1ms!important}}
+
+  .lnav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-top:26px;align-items:stretch}
+  @media(max-width:700px){.lnav{grid-template-columns:1fr}}
+  .lnav a{display:flex;flex-direction:column;gap:3px;text-decoration:none;padding:13px 16px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lnav a:hover{border-color:var(--accent);background:var(--slab-2);transform:translateY(-1px)}
+  .lnav a:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnav .dir{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim)}
+  .lnav .ttl{font-family:"Bricolage Grotesque",sans-serif;font-size:14.5px;color:var(--chalk);line-height:1.3}
+  .lnav .nxt{text-align:right}
+  .lnav .hub{justify-content:center;align-items:center;min-width:118px}
+  .lnav .hub .ttl{font-size:13px;color:var(--dim)}
+  .lnav .off{opacity:.3;pointer-events:none}
+
+  .lnav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-top:26px;align-items:stretch}
+  @media(max-width:700px){.lnav{grid-template-columns:1fr}}
+  .lnav a{display:flex;flex-direction:column;gap:3px;text-decoration:none;padding:13px 16px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lnav a:hover{border-color:var(--accent);background:var(--slab-2);transform:translateY(-1px)}
+  .lnav a:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnav .dir{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim)}
+  .lnav .ttl{font-family:"Bricolage Grotesque",sans-serif;font-size:14.5px;color:var(--chalk);line-height:1.3}
+  .lnav .nxt{text-align:right}
+  .lnav .hub{justify-content:center;align-items:center;min-width:118px}
+  .lnav .hub .ttl{font-size:13px;color:var(--dim)}
+  .lnav .off{opacity:.3;pointer-events:none}
+
+  .lnav{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;margin-top:26px;align-items:stretch}
+  @media(max-width:700px){.lnav{grid-template-columns:1fr}}
+  .lnav a{display:flex;flex-direction:column;gap:3px;text-decoration:none;padding:13px 16px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lnav a:hover{border-color:var(--accent);background:var(--slab-2);transform:translateY(-1px)}
+  .lnav a:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnav .dir{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim)}
+  .lnav .ttl{font-family:"Bricolage Grotesque",sans-serif;font-size:14.5px;color:var(--chalk);line-height:1.3}
+  .lnav .nxt{text-align:right}
+  .lnav .hub{justify-content:center;align-items:center;min-width:118px}
+  .lnav .hub .ttl{font-size:13px;color:var(--dim)}
+  .lnav .off{opacity:.3;pointer-events:none}
+
+  /* Leaving a lesson. The lesson nav sits at the foot of a long page, and the
+     control labelled Back steps the animation rather than the browser — so the
+     way out needs its own button, above the fold and named for where it goes. */
+  .tohub{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);background:var(--slab);
+    border:1px solid var(--edge);border-radius:999px;padding:7px 15px;margin-bottom:18px;
+    transition:color 200ms,border-color 200ms}
+  .tohub:hover{color:var(--accent);border-color:var(--accent)}
+  .tohub:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .tohub i{font-style:normal;transition:transform 200ms var(--ease)}
+  .tohub:hover i{transform:translateX(-3px)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="tohub" href="index.html"><i>&#9664;</i> All lessons</a>
+  <p class="eyebrow">Module 9 · What Comes Next <span>/ Lesson 2 of 5</span></p>
+  <h1>Unpacking values, and <em>the three dots</em></h1>
+  <p class="thesis">Two shortcuts that appear in almost every modern code sample. Destructuring pulls values out into their own boxes; the three dots either sweep up leftovers or pour a whole collection into a new one.</p>
+
+  <div class="board">
+    <div>
+      <div class="panel">
+        <div class="cap"><span>The code</span><span id="lineTag">&mdash;</span></div>
+        <pre class="code" id="code"></pre>
+        <div class="controls">
+          <button class="primary" id="play">Unpack it</button>
+          <button id="back">&#9664; Back</button>
+          <button id="step">Step forward</button>
+          <button id="reset">Start over</button>
+          <div class="speed" role="group" aria-label="Playback speed">
+            <button data-sp="2100" aria-pressed="false">Slow</button>
+            <button data-sp="1400" aria-pressed="true">Normal</button>
+            <button data-sp="750" aria-pressed="false">Fast</button>
+          </div>
+        </div>
+        <div class="scrub">
+          <input type="range" id="seek" min="0" max="1" value="0" step="1" aria-label="Jump to any step">
+          <span class="stepn" id="stepn">step 0</span>
+        </div>
+        <p class="keys">Keys: <b>&#8592;</b> back &nbsp;<b>&#8594;</b> forward &nbsp;<b>space</b> play / pause</p>
+      </div>
+
+      <div class="panel console">
+        <div class="cap"><span>Console output</span><span id="count">0 lines</span></div>
+        <div class="out" id="out"><div class="empty">Nothing printed yet.</div></div>
+      </div>
+    </div>
+
+    <div class="machine">
+      <div class="zone" id="z-obj">
+        <div class="cap"><span>Objects</span><span>by name</span></div>
+        <div class="cab" id="obj"></div>
+        <p class="hint">Destructuring an object matches on drawer names.</p>
+      </div>
+      <div class="zone" id="z-arr">
+        <div class="cap"><span>Arrays</span><span>by position</span></div>
+        <div id="arr"></div>
+        <p class="hint">Destructuring an array matches on slot order.</p>
+      </div>
+      <div class="zone" id="z-mem">
+        <div class="cap"><span>The boxes created</span><span></span></div>
+        <div class="shelf" id="shelf"></div>
+        <p class="hint"></p>
+      </div>
+    </div>
+  </div>
+
+
+
+  <nav class="lnav" aria-label="Lesson navigation"><a href="m9-lesson-1-reduce.html"><span class="dir">&#9664; Previous</span><span class="ttl">Folding a whole list into one answer</span></a><a href="index.html" class="hub"><span class="ttl">All lessons</span></a><a href="m9-lesson-3-try-catch.html" class="nxt"><span class="dir">Next &#9654;</span><span class="ttl">Handling failure without crashing</span></a></nav>
+</div>
+
+<div class="narrate">
+  <div class="narrate-in">
+    <span class="tick" id="tick">0 / 0</span>
+    <p id="note">Press <strong>Unpack it</strong> to begin.</p>
+  </div>
+</div>
+
+<script>
+const CODE = ["<span class=\"k\">const</span> user <span class=\"k\">=</span> { name: <span class=\"s\">\"Asha\"</span>, city: <span class=\"s\">\"Bengaluru\"</span> };", "<span class=\"k\">const</span> { name, city } <span class=\"k\">=</span> user;", "", "<span class=\"k\">const</span> nums <span class=\"k\">=</span> [<span class=\"n\">1</span>, <span class=\"n\">2</span>, <span class=\"n\">3</span>];", "<span class=\"k\">const</span> [first, ...rest] <span class=\"k\">=</span> nums;", "", "<span class=\"k\">const</span> more <span class=\"k\">=</span> [...nums, <span class=\"n\">4</span>];", "<span class=\"k\">const</span> updated <span class=\"k\">=</span> { ...user, city: <span class=\"s\">\"Chennai\"</span> };"];
+const STEPS = [
+ {
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "mem": [],
+  "note": "Two pieces of modern punctuation you will see everywhere. Neither adds a new idea — both are shortcuts for things you already do by hand."
+ },
+ {
+  "line": 2,
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": "now"
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": "now"
+     }
+    ]
+   }
+  ],
+  "mem": [
+   {
+    "n": "name",
+    "v": "\"Asha\"",
+    "k": "const",
+    "t": "string"
+   },
+   {
+    "n": "city",
+    "v": "\"Bengaluru\"",
+    "k": "const",
+    "t": "string"
+   }
+  ],
+  "pulse": [
+   "name",
+   "city"
+  ],
+  "hot": "obj",
+  "note": "<strong>Destructuring.</strong> Those curly braces on the left mean: pull out the drawers with these names and make a box for each.",
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "mem": [
+   {
+    "n": "name",
+    "v": "\"Asha\"",
+    "k": "const",
+    "t": "string"
+   },
+   {
+    "n": "city",
+    "v": "\"Bengaluru\"",
+    "k": "const",
+    "t": "string"
+   }
+  ],
+  "note": "It replaces two lines with one. The names must match the drawer names exactly — that is how it knows what to pull out.",
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": "now"
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "mem": [
+   {
+    "n": "first",
+    "v": "1",
+    "k": "const",
+    "t": "number"
+   },
+   {
+    "n": "rest",
+    "v": "[2, 3]",
+    "k": "const",
+    "t": ""
+   }
+  ],
+  "pulse": [
+   "first",
+   "rest"
+  ],
+  "hot": "arr",
+  "note": "The same idea on an array, but by <strong>position</strong> rather than by name. <code>first</code> takes slot 0.",
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": "kept"
+     },
+     {
+      "v": "3",
+      "st": "kept"
+     }
+    ]
+   }
+  ],
+  "mem": [
+   {
+    "n": "first",
+    "v": "1",
+    "k": "const",
+    "t": "number"
+   },
+   {
+    "n": "rest",
+    "v": "[2, 3]",
+    "k": "const",
+    "t": ""
+   }
+  ],
+  "hot": "arr",
+  "note": "And <code>...rest</code> sweeps up everything left over into a new array. Those three dots mean <strong>“and the others”</strong> here.",
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   },
+   {
+    "lab": "more",
+    "items": [
+     {
+      "v": "1",
+      "st": "made"
+     },
+     {
+      "v": "2",
+      "st": "made"
+     },
+     {
+      "v": "3",
+      "st": "made"
+     },
+     {
+      "v": "4",
+      "st": "now"
+     }
+    ]
+   }
+  ],
+  "mem": [],
+  "hot": "arr",
+  "note": "On the other side of an <code>=</code>, the same three dots mean the opposite: <strong>unpack this list right here</strong>. All three numbers are poured into a new array, then 4 is added.",
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   },
+   {
+    "lab": "more",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     },
+     {
+      "v": "4",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "note": "Note this <em>copies</em>. <code>nums</code> is untouched — exactly like <code>map</code> in lesson 6.4. This is how you add to a list without editing the original.",
+  "mem": [],
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   },
+   {
+    "title": "updated",
+    "tag": "a copy",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\""
+     },
+     {
+      "k": "city",
+      "v": "\"Chennai\"",
+      "st": "now"
+     }
+    ]
+   }
+  ],
+  "arr": [],
+  "hot": "obj",
+  "note": "The same trick on an object: pour all of <code>user</code>'s drawers into a new cabinet, then set <code>city</code> afterwards to overwrite it.",
+  "mem": []
+ },
+ {
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   },
+   {
+    "title": "updated",
+    "tag": "a copy",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\""
+     },
+     {
+      "k": "city",
+      "v": "\"Chennai\"",
+      "st": "now"
+     }
+    ]
+   }
+  ],
+  "note": "Order matters. Anything written <em>after</em> the three dots wins. Put <code>city</code> first and the spread would overwrite it right back.",
+  "mem": [],
+  "arr": []
+ },
+ {
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   },
+   {
+    "title": "updated",
+    "tag": "a copy",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\""
+     },
+     {
+      "k": "city",
+      "v": "\"Chennai\"",
+      "st": "now"
+     }
+    ]
+   }
+  ],
+  "note": "Two cabinets now, not one changed cabinet. <strong>“Copy, with one thing different”</strong> is one of the most common moves in modern JavaScript — and it is the whole basis of how React handles state.",
+  "mem": [],
+  "arr": []
+ },
+ {
+  "obj": [
+   {
+    "title": "user",
+    "tag": "object",
+    "rows": [
+     {
+      "k": "name",
+      "v": "\"Asha\"",
+      "st": ""
+     },
+     {
+      "k": "city",
+      "v": "\"Bengaluru\"",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "arr": [
+   {
+    "lab": "nums",
+    "items": [
+     {
+      "v": "1",
+      "st": ""
+     },
+     {
+      "v": "2",
+      "st": ""
+     },
+     {
+      "v": "3",
+      "st": ""
+     }
+    ]
+   }
+  ],
+  "note": "Same three dots, two jobs. On the left of an <code>=</code> they collect what is left over. On the right they unpack. Everything else is detail.",
+  "mem": []
+ }
+];
+const $ = id => document.getElementById(id);
+let i = 0, timer = null, speed = 1400;
+
+function paintCode(s){
+  const src = s.code || CODE;
+  $('code').innerHTML = src.map((l,n)=>{
+    const c = s.bad === n+1 ? ' bad' : s.line === n+1 ? ' on' : (s.dim||[]).includes(n+1) ? ' dim' : '';
+    return `<span class="ln${c}" data-n="${n+1}">${l || '&nbsp;'}</span>`;
+  }).join('');
+  $('lineTag').textContent = s.bad ? `line ${s.bad}` : s.line ? `line ${s.line}` : '\u2014';
+}
+
+function paintMem(s){
+  const el = $('shelf'); if(!el) return;
+  const m = s.mem || [];
+  el.innerHTML = m.length ? m.map(b=>`
+    <div class="box" data-n="${b.n}" data-t="${b.t||''}" data-lock="${b.k==='const'?1:0}">
+      <div class="name"><span>${b.n}</span><em>${b.k||''}</em></div>
+      <div class="val">${b.v}</div>
+    </div>`).join('') : `<p class="hint" style="margin:0">No boxes yet.</p>`;
+  (s.pulse||[]).forEach(n=>{ const x = el.querySelector(`.box[data-n="${n}"]`); if(x) x.classList.add('pulse'); });
+  (s.shake||[]).forEach(n=>{ const x = el.querySelector(`.box[data-n="${n}"]`); if(x) x.classList.add('shake'); });
+}
+
+function paintBench(s){
+  const el = $('bench'); if(!el) return;
+  el.innerHTML = s.bench
+    ? `<div class="expr flip">${s.bench.e}</div>` + (s.bench.s ? `<div class="sub">${s.bench.s}</div>` : '')
+    : `<div class="idle">Nothing being worked out right now.</div>`;
+}
+
+function paintGate(s){
+  const el = $('gate'); if(!el) return;
+  const g = s.gate;
+  el.innerHTML = g
+    ? `<div class="q flip">${g.q}</div>` + (g.v === undefined ? ''
+      : `<div class="verdict ${g.v?'t':'f'}">${g.v ? (g.tl||'true') : (g.fl||'false')}</div>`)
+    : `<div class="idle">No question being asked right now.</div>`;
+  const d = $('door');
+  if(d) d.className = 'door' + (g && g.v === true ? ' open' : g && g.v === false ? ' shut' : '');
+}
+
+function paintPips(s){
+  const el = $('pips'); if(!el) return;
+  const rows = s.pips || [];
+  el.innerHTML = rows.length ? rows.map(r=>{
+    const cells = [];
+    for(let p=1; p<=r.n; p++){
+      const c = r.now === p ? 'now' : (r.done||[]).includes(p) ? 'done' : '';
+      cells.push(`<div class="pip ${c}">${p}</div>`);
+    }
+    return `<div class="piprow"><span class="lab">${r.lab}</span>${cells.join('')}</div>`;
+  }).join('') : `<p class="hint" style="margin:0">Not running yet.</p>`;
+}
+
+function paintBranch(s){
+  const el = $('branch'); if(!el) return;
+  const b = s.branch || {};
+  el.querySelectorAll('.path').forEach(p=>{
+    const k = p.dataset.p;
+    p.className = 'path' + (b[k] ? ' ' + b[k] : '');
+  });
+}
+
+function paintBuckets(s){
+  const el = $('buckets'); if(!el) return;
+  const b = s.buckets || {t:[], f:[]};
+  const fill = (arr) => arr.length
+    ? arr.map(x=>`<span class="chip${x===s.fresh?' fresh':''}">${x}</span>`).join('')
+    : `<span class="chip" style="opacity:.4">empty</span>`;
+  el.querySelector('[data-w="t"] .items').innerHTML = fill(b.t||[]);
+  el.querySelector('[data-w="f"] .items').innerHTML = fill(b.f||[]);
+  const d = $('drop');
+  if(d){
+    d.innerHTML = s.drop ? s.drop : `<span class="idle">Step forward to test a value.</span>`;
+    d.classList.remove('flip'); void d.offsetWidth; d.classList.add('flip');
+  }
+}
+
+function paintOut(s){
+  const o = s.out || [];
+  $('out').innerHTML = o.length
+    ? o.map((x,n)=> x.err
+        ? `<div class="err">${x.t}</div>`
+        : `<div class="${x.num?'num':''}"><span>${n+1}.</span>${x.t}</div>`).join('')
+    : `<div class="empty">Nothing printed yet.</div>`;
+  $('count').textContent = o.length === 1 ? '1 line' : o.length + ' lines';
+}
+
+function paintArr(s){
+  const el = $('arr'); if(!el) return;
+  const rows = s.arr || [];
+  el.innerHTML = rows.length ? rows.map(r=>`
+    <div class="arow"><span class="arlab">${r.lab||''}</span>
+      <div class="slots2">${(r.items||[]).map((it,n)=>`
+        <div class="slot ${it.st||''} ${r.wide?'wide':''}">
+          <div class="ix">${it.ix!==undefined?it.ix:n}</div><div class="vv">${it.v}</div>
+        </div>`).join('') || `<span class="rvar none">empty list</span>`}</div>
+    </div>`).join('') : `<p class="hint" style="margin:0">Nothing yet.</p>`;
+}
+
+function paintObj(s){
+  const el = $('obj'); if(!el) return;
+  const cs = s.obj || [];
+  el.innerHTML = cs.length ? cs.map(c=>`
+    <div class="cabinet"><div class="ct"><span>${c.title}</span><em>${c.tag||''}</em></div>
+      ${(c.rows||[]).map(r=>
+        `<div class="drawer ${r.st||''}"><span class="dk">${r.k}</span><span class="dv">${r.v}</span></div>`
+      ).join('')}
+    </div>`).join('') : `<p class="hint" style="margin:0">Nothing yet.</p>`;
+}
+
+function paintRooms(s){
+  const el = $('rooms'); if(!el) return;
+  const rs = s.rooms || [];
+  el.innerHTML = rs.length ? rs.map((r,n)=>`
+    <div class="room ${n>0?'nest':''} ${r.st||''}">
+      <div class="rt"><span>${r.lab}</span><span>${r.tag||''}</span></div>
+      <div class="vars">${(r.vars||[]).map(v=>
+        `<span class="rvar ${v.st||''}">${v.n}${v.v!==undefined?' = '+v.v:''}</span>`
+      ).join('') || `<span class="rvar none">no variables of its own</span>`}</div>
+      ${r.look ? `<div class="look">${r.look}</div>` : ''}
+    </div>`).join('') : `<p class="hint" style="margin:0">Nothing yet.</p>`;
+}
+
+function paintTree(s){
+  const el = $('tree'); if(!el) return;
+  const t = s.tree || [];
+  el.innerHTML = t.length ? t.map(n=>`
+    <div class="tnode ${n.st||''}" style="margin-left:${(n.d||0)*20}px">
+      <span class="tg">${n.t}</span>${n.x ? `<span class="tx">${n.x}</span>` : ''}
+    </div>`).join('') : `<p class="hint" style="margin:0">Nothing built yet.</p>`;
+}
+
+function paintPage(s){
+  const el = $('view'); if(!el) return;
+  const p = s.page || {};
+  el.className = 'view' + (p.dark ? ' dark' : '');
+  let h = '';
+  if(p.h) h += `<h3 class="${p.hcls||''}">${p.h}</h3>`;
+  if(p.field !== undefined) h += `<div class="pfield ${p.fieldcls||''}">${p.field || 'Type a task\u2026'}</div>`;
+  if(p.list) h += `<div class="plist">${p.list.map(x=>
+      `<div class="pitem ${x.cls||''}">${x.t}</div>`).join('')}</div>`;
+  if(p.btn) h += `<button class="pbtn ${p.btncls||''}" tabindex="-1">${p.btn}</button>`;
+  if(p.note) h += `<span class="pnote">${p.note}</span>`;
+  el.innerHTML = h || `<span class="pblank">blank page</span>`;
+}
+
+function paintBays(s){
+  const el = $('bays'); if(!el) return;
+  const b = s.bays || [];
+  el.innerHTML = b.map(r=>`
+    <div class="bay ${r.hot?'hot':''}">
+      <div class="baylab"><span>${r.lab}</span><span>${r.sub||''}</span></div>
+      <div class="baybox ${r.col?'col':''}">${(r.items||[]).map(x=>
+        `<span class="bchip" data-k="${x.k||''}">${x.v}</span>`).join('')
+        || `<span class="bempty">${r.empty||'empty'}</span>`}</div>
+    </div>`).join('');
+}
+
+function render(){
+  const s = STEPS[i];
+  paintCode(s); paintMem(s); paintBench(s); paintGate(s);
+  paintPips(s); paintBranch(s); paintBuckets(s);
+  paintArr(s); paintObj(s); paintRooms(s);
+  paintTree(s); paintPage(s); paintBays(s); paintOut(s);
+
+  document.querySelectorAll('.zone').forEach(z=>
+    z.classList.toggle('hot', z.id === 'z-' + (s.hot||'')));
+
+  $('note').innerHTML = s.note;
+  $('note').classList.remove('flip'); void $('note').offsetWidth; $('note').classList.add('flip');
+  $('tick').textContent = `${i} / ${STEPS.length-1}`;
+  $('step').disabled = i >= STEPS.length-1;
+  $('back').disabled = i <= 0;
+  const seek = $('seek');
+  seek.max = STEPS.length-1; seek.value = i;
+  seek.style.setProperty('--pct', (i/(STEPS.length-1)*100).toFixed(1)+'%');
+  $('stepn').textContent = `step ${i} of ${STEPS.length-1}`;
+  $('play').textContent = timer ? 'Pause'
+    : (i >= STEPS.length-1 ? 'Start over' : (i > 0 ? 'Keep going' : 'Unpack it'));
+}
+
+function forward(){ if(i>=STEPS.length-1){ stop(); return; } i++; render(); if(i>=STEPS.length-1) stop(); }
+function back(){ if(i>0){ i--; render(); } }
+function stop(){ clearInterval(timer); timer=null; render(); }
+
+$('step').onclick  = ()=>{ stop(); forward(); };
+$('back').onclick  = ()=>{ stop(); back(); };
+$('reset').onclick = ()=>{ stop(); i=0; render(); };
+$('seek').oninput  = e => { stop(); i = Math.min(STEPS.length-1, Math.max(0, +e.target.value)); render(); };
+$('play').onclick  = ()=>{ if(timer) return stop(); if(i>=STEPS.length-1) i=0;
+                           forward(); timer=setInterval(forward,speed); render(); };
+document.querySelectorAll('.speed button').forEach(b=>{
+  b.onclick = ()=>{ document.querySelectorAll('.speed button').forEach(x=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); speed = +b.dataset.sp;
+    if(timer){ clearInterval(timer); timer = setInterval(forward, speed); } };
+});
+document.addEventListener('keydown', e=>{
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+  if(typing) return;
+  if(e.key==='ArrowRight'){ e.preventDefault(); stop(); forward(); }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); stop(); back(); }
+  if(e.key===' '){ e.preventDefault(); $('play').click(); }
+});
+render();
+</script>
+</body>
+</html>

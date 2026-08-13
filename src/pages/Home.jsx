@@ -59,6 +59,30 @@ export default function Home({ onBook }) {
       });
     }
 
+    // The JavaScript course is finished and ships as static pages under
+    // /js-course/, so it is the one card on this page that leads somewhere real.
+    // Injected rather than baked into HOME_BODY because that markup is a base64
+    // blob ported verbatim. Note the explicit "in": .reveal is opacity:0 until the
+    // scroll observer adds it, and that observer only scans once, before this runs.
+    const offers = host.querySelector("#courses .offers");
+    if (offers) {
+      const card = document.createElement("div");
+      card.className = "offer featured reveal in";
+      card.style.cssText =
+        "grid-column:1/-1;flex-direction:row;align-items:center;gap:26px;flex-wrap:wrap";
+      card.innerHTML =
+        '<div style="flex:1;min-width:260px">' +
+        '<span class="badge">Live now · Free</span>' +
+        '<h3 style="margin-top:6px">JavaScript From Zero</h3>' +
+        '<p style="margin-bottom:0">41 animated lessons across 9 modules. Every lesson is an ' +
+        "animation you control — the code on one side, a picture of what the computer is " +
+        "actually doing on the other. Nothing to install, no sign-up.</p></div>" +
+        '<a class="btn-offer" href="/js-course/" ' +
+        'style="width:auto;padding:14px 30px;text-decoration:none;text-align:center">' +
+        "Start learning →</a>";
+      offers.prepend(card);
+    }
+
     // data-route links go through the router; the page's own data-target
     // handler only knows how to scroll to an in-page section
     host.querySelectorAll("[data-route]").forEach((el) => {

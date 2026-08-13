@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JavaScript From Zero — All Lessons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--void:#1E1832;--slab:#2A2247;--slab-2:#332A55;--edge:#453A6B;--chalk:#EDE7FA;--dim:#9B90BC;
+    --amber:#FFC15E;--rose:#FF6392;--peri:#8B8CF0;--go:#7FD9A6;--ease:cubic-bezier(.22,1,.36,1);
+    --tick:7px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--chalk);font-family:"Newsreader",Georgia,serif;font-size:17px;
+    line-height:1.55;padding:clamp(24px,5vw,72px) clamp(16px,4vw,56px) 90px;
+    background-image:radial-gradient(circle at 12% 0%,rgba(139,140,240,.17),transparent 55%),
+                     radial-gradient(circle at 92% 8%,rgba(255,193,94,.1),transparent 50%);
+    background-attachment:fixed}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* Hero. The old single column left the right half of a laptop screen empty,
+     so the four figures and the how-to move into a second column beside the
+     headline instead of stacking under it. */
+  .hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);
+    gap:clamp(26px,4.5vw,60px);align-items:end}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;align-items:start;gap:32px}}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--peri)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,6vw,68px);
+    line-height:.94;letter-spacing:-.035em;margin:16px 0 18px}
+  /* block, so the lockup always breaks as JavaScript / From Zero rather than
+     wherever the column width happens to put it */
+  h1 em{font-style:normal;color:var(--amber);display:block}
+  .lede{max-width:52ch;color:#CFC5E8;font-size:clamp(17px,2vw,20px)}
+
+  /* One obvious way in. Forty-one links and no primary action left a beginner
+     to guess where the front door was. */
+  .start{display:inline-flex;align-items:center;gap:10px;margin-top:28px;
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;
+    background:var(--amber);color:var(--void);text-decoration:none;
+    padding:13px 24px;border-radius:12px;
+    transition:transform 160ms var(--ease),box-shadow 200ms}
+  .start:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,193,94,.24)}
+  .start:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .start i{font-style:normal;transition:transform 200ms var(--ease)}
+  .start:hover i{transform:translateX(4px)}
+
+  /* The four figures read as a spec sheet rather than badges — this is a thing
+     you operate, and the back of an instrument is where its numbers live. */
+  .spec{border-top:1px solid var(--edge)}
+  .spec div{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    padding:9px 2px;border-bottom:1px solid var(--edge)}
+  .spec dt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--dim)}
+  .spec dd{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:23px;
+    line-height:1;color:var(--amber)}
+  .howto{margin-top:22px;border:1px solid var(--edge);border-left:3px solid var(--go);
+    border-radius:0 13px 13px 0;background:var(--slab);padding:15px 19px}
+  .howto h3{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;margin-bottom:6px}
+  .howto p{font-size:15.5px;color:#CFC5E8}
+  .mod{margin-top:46px}
+  .modhead{border-bottom:1px solid var(--edge);padding-bottom:13px;margin-bottom:16px;position:relative}
+  .modhead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(21px,3vw,29px);letter-spacing:-.02em}
+  .modhead p{color:var(--dim);font-size:15px;margin-top:5px;max-width:62ch}
+  .modcount{position:absolute;right:0;top:2px;font-family:"JetBrains Mono",monospace;font-size:10px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  @media(max-width:600px){.modcount{display:none}}
+  .lcards{display:flex;flex-direction:column;gap:9px}
+  .lcard{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:15px;
+    text-decoration:none;padding:14px 17px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lcard:hover{border-color:var(--amber);background:var(--slab-2);transform:translateX(3px)}
+  .lcard:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnum{grid-column:1;grid-row:1/span 2;align-self:center;
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--dim);background:var(--void);
+    border:1px solid var(--edge);border-radius:9px;width:34px;height:34px;display:grid;
+    place-items:center;transition:color 200ms,border-color 200ms}
+  .lcard:hover .lnum{color:var(--amber);border-color:var(--amber)}
+  .lbody{grid-column:2;grid-row:1;min-width:0}
+  .lt{font-family:"Bricolage Grotesque",sans-serif;font-size:16px;color:var(--chalk);display:block;
+    line-height:1.25}
+  .lb{font-size:13.5px;color:var(--dim);display:block;margin-top:3px;line-height:1.4;max-width:84ch}
+  .lsteps{grid-column:3;grid-row:1;align-self:center;
+    font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--dim);text-align:right;
+    line-height:1.1;white-space:nowrap;transition:color 200ms}
+  .lcard:hover .lsteps{color:var(--amber)}
+  .lsteps em{display:block;font-style:normal;font-size:8.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#584B7F;margin-top:2px}
+  /* A play mark, not a chevron: every one of these is an animation you press
+     through, and a chevron would promise an article. */
+  .lsteps::before{content:"";display:inline-block;width:0;height:0;margin-right:9px;
+    border-left:8px solid currentColor;border-top:5px solid transparent;
+    border-bottom:5px solid transparent;transform:translateY(1px);
+    transition:transform 200ms var(--ease)}
+  .lcard:hover .lsteps::before{transform:translate(3px,1px)}
+
+  /* A scale model of the scrubber inside the lesson: one tick per animated
+     step, so a 28-step lesson is visibly longer than a 9-step one and the row
+     shows its own weight. Hovering runs a playhead across it. --steps comes
+     from the count already printed in .lsteps, so the two can never disagree. */
+  .lcard::after{content:"";grid-column:2/-1;grid-row:2;align-self:end;
+    height:7px;margin-top:11px;
+    width:calc(var(--steps,12) * var(--tick));max-width:100%;
+    background-image:
+      repeating-linear-gradient(90deg,var(--amber) 0 2px,transparent 2px var(--tick)),
+      repeating-linear-gradient(90deg,rgba(155,144,188,.5) 0 2px,transparent 2px var(--tick));
+    background-repeat:no-repeat,repeat-x;
+    background-size:0 100%,100% 100%;
+    transition:background-size 560ms var(--ease)}
+  .lcard:hover::after,.lcard:focus-visible::after{background-size:100% 100%,100% 100%}
+
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--edge);color:var(--dim);
+    font-size:14.5px;max-width:62ch}
+
+  @media(max-width:520px){.lsteps{font-size:13px}.lsteps em{display:none}}
+
+  /* ---- the hero demo: one real lesson, running ----------------------------
+     A contents page for an animated course that is itself motionless argues
+     against its own product. This is a working miniature of a lesson, built
+     from the same parts the real ones use — highlighted line, memory boxes,
+     one sentence — so the page demonstrates rather than describes. */
+  .demo{border:1px solid var(--edge);border-radius:16px;background:var(--slab);
+    padding:16px;display:flex;flex-direction:column;gap:13px}
+  .dcap{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;
+    align-items:center;gap:12px}
+  .dcap b{color:var(--amber);font-weight:400}
+  .dcode{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;
+    background:var(--void);border:1px solid var(--edge);border-radius:11px;padding:9px 0;
+    overflow-x:auto}
+  .dln{display:block;padding:0 10px 0 32px;position:relative;color:#B7ABD8;border-radius:0;
+    transition:background 320ms var(--ease),color 220ms}
+  .dln::before{content:attr(data-n);position:absolute;left:11px;color:#584B7F;font-size:10.5px}
+  .dln.on{background:rgba(255,193,94,.15);color:var(--chalk);box-shadow:inset 2px 0 0 var(--amber)}
+  .dcode i{font-style:normal}
+  .dcode .k{color:var(--peri)}.dcode .s{color:var(--go)}.dcode .n{color:var(--rose)}
+
+  .dstage{border:1px solid var(--edge);border-radius:11px;background:var(--void);
+    padding:11px 12px;min-height:92px;display:flex;flex-direction:column;gap:10px}
+  .dsl{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:#584B7F;display:flex;justify-content:space-between;gap:10px}
+  .dwork{color:var(--amber);letter-spacing:0;text-transform:none;font-size:11px}
+  .dmem{display:flex;gap:9px;flex-wrap:wrap;min-height:52px;align-items:flex-start}
+  .dbox{background:var(--slab-2);border:1px solid var(--edge);border-radius:10px;min-width:92px;
+    overflow:hidden;animation:dpop 340ms var(--ease) both}
+  @keyframes dpop{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+  .dbox .dn{font-family:"JetBrains Mono",monospace;font-size:10px;padding:4px 9px;color:var(--dim);
+    background:rgba(0,0,0,.2);border-bottom:1px solid var(--edge)}
+  .dbox .dv{font-family:"JetBrains Mono",monospace;font-size:13.5px;padding:8px 9px;
+    text-align:center;color:var(--chalk)}
+  .dbox[data-t="s"] .dv{color:var(--go)}
+  .dbox[data-t="n"] .dv{color:var(--rose)}
+  .dbox.lit{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.14)}
+  .dbox.lit .dv{color:var(--amber)}
+  .dempty{font-size:12.5px;color:#584B7F;font-style:italic;align-self:center}
+
+  .dbar{display:flex;align-items:center;gap:11px}
+  .dplay{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;
+    background:var(--amber);color:var(--void);font-size:12px;display:grid;place-items:center;
+    transition:transform 150ms var(--ease),filter 150ms}
+  .dplay:hover{filter:brightness(1.1);transform:scale(1.06)}
+  .dplay:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dseek{-webkit-appearance:none;appearance:none;flex:1;height:20px;background:transparent;
+    cursor:pointer;margin:0}
+  .dseek::-webkit-slider-runnable-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-moz-range-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--chalk);border:2px solid var(--void);margin-top:-4.5px}
+  .dseek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--chalk);
+    border:2px solid var(--void)}
+  .dseek:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dnote{font-size:14.5px;line-height:1.45;color:#CFC5E8;min-height:63px}
+  .dnote b{color:var(--chalk);font-weight:500}
+  .dnote code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--slab-2);
+    padding:1px 5px;border-radius:5px;color:var(--amber)}
+  .dnote .fl{display:block;animation:dnote 360ms var(--ease)}
+  @keyframes dnote{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+  /* ---- course shape: every module drawn to its real step count ---- */
+  .map{margin-top:44px;border-top:1px solid var(--edge);padding-top:22px}
+  .maphead{display:flex;justify-content:space-between;align-items:baseline;gap:22px;flex-wrap:wrap}
+  .maphead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:23px;
+    letter-spacing:-.02em}
+  .mapsum{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim)}
+  .mapsum b{color:var(--amber);font-weight:400}
+  /* padding-top leaves room for the tallest bar's figure, which sits above its column */
+  .mapbars{display:flex;align-items:flex-end;gap:clamp(5px,1vw,11px);height:186px;
+    margin-top:20px;padding-top:19px}
+  .bar{flex:1;display:flex;flex-direction:column;gap:7px;height:100%;text-decoration:none;
+    border-radius:8px}
+  .bar:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  /* the column is sized against this track, so the label below can never squeeze it */
+  .btrack{flex:1;display:flex;align-items:flex-end}
+  /* A column is banded into one segment per lesson. Height is the module's step
+     count; the banding is how many lessons make it up. So Module 6 reads as both
+     the heaviest and the most divided, which is exactly what it is. */
+  .bar .col{width:100%;position:relative;display:flex;flex-direction:column;gap:2px;
+    transition:transform 240ms var(--ease)}
+  .seg{flex:1 1 0;min-height:3px;border-radius:3px;background:var(--slab-2);
+    border:1px solid var(--edge);transition:background 240ms,border-color 240ms}
+  .seg:first-child{border-radius:6px 6px 3px 3px}
+  .bar:hover .seg,.bar:focus-visible .seg{background:var(--amber);border-color:var(--amber)}
+  .bar .val{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);
+    position:absolute;top:-17px;left:0;right:0;text-align:center;transition:color 240ms}
+  .bar .lab{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#584B7F;
+    transition:color 240ms}
+  .bar:hover .col,.bar:focus-visible .col{transform:translateY(-3px)}
+  .bar:hover .val,.bar:focus-visible .val,.bar:hover .lab,.bar:focus-visible .lab{color:var(--amber)}
+  .map .hint{font-size:13px;color:var(--dim);margin-top:14px;max-width:62ch}
+
+  @media(prefers-reduced-motion:reduce){
+    .lcard,.lcard::after,.lsteps,.lsteps::before,.start,.start i,
+    .dln,.dbox,.bar .col,.seg,.bar .val,.bar .lab{transition:none}
+    .lcard:hover,.start:hover,.start:hover i,.lcard:hover .lsteps::before,
+    .bar:hover .col,.bar:focus-visible .col{transform:none}
+    .dbox,.dnote .fl{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">An animated course for complete beginners</p>
+      <h1>JavaScript <em>From Zero</em></h1>
+      <p class="lede">Every lesson is an animation you control. Code on the left, a picture of what the
+      computer is actually doing on the right, and one plain sentence explaining each step. No prior
+      coding experience assumed, and nothing to install.</p>
+      <a class="start" href="m1-lesson-1-what-javascript-is.html">Start with lesson 1 <i>&rarr;</i></a>
+    </div>
+
+    <!-- A real lesson, in miniature and running. Built by the script below. -->
+    <div class="demo">
+      <div class="dcap"><span>A lesson, running</span><span><b id="dtick">0</b> / 5</span></div>
+      <pre class="dcode" id="dcode"></pre>
+      <div class="dstage">
+        <div class="dsl"><span>The computer's memory</span><span class="dwork" id="dwork"></span></div>
+        <div class="dmem" id="dmem"></div>
+      </div>
+      <div class="dbar">
+        <button class="dplay" id="dplay" type="button" aria-label="Pause the demonstration">&#10073;&#10073;</button>
+        <input class="dseek" id="dseek" type="range" min="0" max="5" value="0" step="1"
+               aria-label="Step through the demonstration">
+      </div>
+      <p class="dnote" id="dnote">Every lesson works like this.</p>
+    </div>
+  </div>
+
+  <section class="map" aria-labelledby="maph">
+    <div class="maphead">
+      <h2 id="maph">The shape of the course</h2>
+      <p class="mapsum"><b>41</b> lessons &middot; <b>9</b> modules &middot;
+        <b>573</b> animated steps &middot; <b>~13h</b> with practice</p>
+    </div>
+    <div class="mapbars" id="mapbars"></div>
+    <p class="hint">One column per module, as tall as the animated steps inside it and banded once
+      per lesson &mdash; so you can see where the course gets heavy before you start. Click a column
+      to jump to that module.</p>
+  </section>
+
+  <div class="howto">
+    <h3>How to actually use this</h3>
+    <p>Watch each lesson once at normal speed to see its shape. Then step through it manually a second
+    time and try to predict what happens <em>before</em> pressing the button. Predicting is what turns
+    watching into knowing. Use the scrubber to jump back to any moment.</p>
+  </div>
+
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 1 · Getting Started</h2>
+          <p>What JavaScript is, where it runs, and how to read an error message without panic.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m1-lesson-1-what-javascript-is.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">What JavaScript is, and where it lives</span>
+          <span class="lb">Before you write anything, it helps enormously to know what you're writing and what runs it. Step through a real web page loading and watch the…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-2-your-first-line.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Your first line, taken apart</span>
+          <span class="lb">One short line makes the computer say something back to you. It contains six separate ideas, and you'll use every one of them in every program you…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-3-your-first-error.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Your first error, and how to read it</span>
+          <span class="lb">We are going to break things on purpose. Red text is not a punishment and it does not mean you're bad at this — it's the computer telling you,…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 2 · Storing Information</h2>
+          <p>Boxes with names, the kinds of value that go in them, and the conversions JavaScript does behind your back.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m2-lesson-1-variables.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">A variable is a box with a name on it</span>
+          <span class="lb">This is the foundation everything else sits on. Watch the computer's memory fill up as each line runs, and see the one rule that makes half of…</span></span>
+          <span class="lsteps">17<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-2-types.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Numbers, text, and true or false</span>
+          <span class="lb">There are only a handful of kinds of value in JavaScript, and telling them apart on sight is a skill you can pick up in ten minutes. The boxes are…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-3-operators.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Doing sums, and asking questions</span>
+          <span class="lb">Two families of operator, doing two completely different jobs. One family gives you a number back. The other gives you a plain yes or no — and…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-4-coercion.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">When JavaScript quietly changes your type</span>
+          <span class="lb">“5” plus 5 gives “55”, but “5” minus 5 gives 0. This looks like the language is broken. It is not — there is a hidden conversion step, and once…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-5-strings.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Text has tools of its own</span>
+          <span class="lb">Text is the type you will handle most, and it arrives with built-in tools. It also has a much better way of building sentences than the plus signs…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 3 · Making Decisions</h2>
+          <p>Questions that answer true or false, and code that chooses a path because of them.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m3-lesson-1-conditions.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Questions with only two possible answers</span>
+          <span class="lb">Before code can choose a path, it needs something to choose on. That something is always a question whose answer is true or false — and joining…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-2-truthy-falsy.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">What counts as yes when the answer is not true or false</span>
+          <span class="lb">You will constantly write conditions around values that are not booleans at all — a name, a count, an empty box. JavaScript sorts every one of…</span></span>
+          <span class="lsteps">24<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-3-if-else.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Forks in the road: only one path runs</span>
+          <span class="lb">A common beginner belief is that all the branches somehow run. They do not. Exactly one runs, and then JavaScript walks away — which is why the…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 4 · Repeating Work</h2>
+          <p>Doing the same work many times without writing it many times.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m4-lesson-1-for-loops.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">A loop is a question asked over and over</span>
+          <span class="lb">Loops are where a lot of self-taught beginners first feel stuck, because three separate instructions sit on one line with semicolons between them.…</span></span>
+          <span class="lsteps">23<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-2-while-break.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Repeat until done, and escape early</span>
+          <span class="lb">A for loop is for when you are counting. A while loop is for when you are waiting for something to change — and it will happily run forever if you…</span></span>
+          <span class="lsteps">28<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-3-nested-loops.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Loops inside loops, for rows and columns</span>
+          <span class="lb">One loop handles a list. Two nested loops handle a grid. The inner counter races while the outer one crawls — and seeing both move at once is the…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 5 · Writing Your Own Commands</h2>
+          <p>Building your own commands. The hinge of the whole course, and where most people stall.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m5-lesson-1-define-vs-call.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Writing a function does not run it</span>
+          <span class="lb">Module 5 is the hinge of the whole course, and this is the idea people trip on first. Drawing a blueprint and building the thing are two different…</span></span>
+          <span class="lsteps">10<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-2-parameters.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Slots in the blueprint, filled at the call</span>
+          <span class="lb">Parameters are what turn one function into a hundred. They are empty slots in the definition, filled with real values every time you call it — and…</span></span>
+          <span class="lsteps">11<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-3-return.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Printing a value is not the same as returning it</span>
+          <span class="lb">A learner writes a function that logs the answer, then tries to use that answer somewhere else, and gets undefined. It happens every day, all over…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-4-scope.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Where a variable can be seen from</span>
+          <span class="lb">“x is not defined” is one of the three errors you will meet most often, and it is nearly always a room problem. Watch JavaScript search for a name…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-5-arrow-functions.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Four ways to write exactly the same function</span>
+          <span class="lb">Arrow functions look like a new concept. They are not — they are new punctuation for something you already understand. Watch one function shed…</span></span>
+          <span class="lsteps">10<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 6 · Lists and Records</h2>
+          <p>Lists and records — the shape that nearly all real data arrives in.</p>
+          <span class="modcount">7 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m6-lesson-1-arrays.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Many values, one name</span>
+          <span class="lb">An array is a shelf with numbered slots. There is exactly one surprise in this lesson, and it is that the numbering starts at zero — everything…</span></span>
+          <span class="lsteps">9<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-2-add-remove.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Adding and removing, at either end</span>
+          <span class="lb">Four small methods handle almost all list editing you will ever do. Two work at the end of the array, two at the front — and watching the…</span></span>
+          <span class="lsteps">11<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-3-walking-arrays.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Walking a list, one slot at a time</span>
+          <span class="lb">This is where loops and arrays finally meet. The one thing to keep straight is the difference between the item and its position — and that is…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-4-map.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Change every item, in one line</span>
+          <span class="lb">map takes a list and a small machine, and runs every item through that machine. The result is a brand new list — and the original is left exactly…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-5-filter.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Keeping only the items you want</span>
+          <span class="lb">filter uses the same belt as map, but each item hits a gate instead of a machine. True and it continues; false and it drops through the floor. The…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-6-foreach-find-sort.html">
+          <span class="lnum">6</span>
+          <span class="lbody"><span class="lt">Three more tools, two of them with traps</span>
+          <span class="lb">forEach walks without collecting. find stops at the first match. sort reorders — and does two surprising things while it does it.</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-7-objects.html">
+          <span class="lnum">7</span>
+          <span class="lbody"><span class="lt">Cabinets with words on the drawers</span>
+          <span class="lb">Arrays are for many of the same thing. Objects are for one thing with many parts. Put the two together — an array of objects — and you have the…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 7 · Making Pages Come Alive</h2>
+          <p>Off the console and onto a real page that responds to a real person.</p>
+          <span class="modcount">6 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m7-lesson-1-dom-tree.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Your page, as JavaScript sees it</span>
+          <span class="lb">Without this picture, DOM code is memorised incantations. With it, everything that follows is obvious. Watch the tree grow from the HTML, line by…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-2-finding-elements.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Finding the node you want to change</span>
+          <span class="lb">Two functions do almost all of the searching you will ever need. The interesting part is what happens when they find nothing — because that…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-3-changing-the-page.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Making the page actually change</span>
+          <span class="lb">This is the payoff for six modules of work in a console. Code on the left, a real page on the right, updating as each line runs.</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-4-events.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">When the browser calls your code</span>
+          <span class="lb">Up to now you decided when everything ran. An event listener reverses that: you hand your function to the browser and it calls you back. That…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-5-forms.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Getting hold of what the visitor typed</span>
+          <span class="lb">Forms are the most common thing a beginner builds and the most common thing to go mysteriously wrong. Two facts explain nearly all of it:…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-6-todo-app.html">
+          <span class="lnum">6</span>
+          <span class="lbody"><span class="lt">Everything so far, in one working app</span>
+          <span class="lb">A guided build of a real to-do list, with no new syntax at all. The one habit worth taking from it: change the data, then redraw the page from it…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 8 · Handling Things That Take Time</h2>
+          <p>Why waiting makes output arrive in the wrong order, and how to fetch live data.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m8-lesson-1-settimeout.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Code that runs later</span>
+          <span class="lb">This is the first moment code stops running strictly top to bottom. It needs a picture rather than an explanation — so watch the callback…</span></span>
+          <span class="lsteps">11<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-2-event-loop.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Why output arrives in the wrong order</span>
+          <span class="lb">JavaScript has exactly one worker. Everything slow gets handed to the browser and comes back later — and “later” follows strict, learnable rules.…</span></span>
+          <span class="lsteps">16<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-3-promises.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">A promise is a sealed envelope</span>
+          <span class="lb">You ask for data and get back something that is not data. It looks like a bug and it is the whole design — an envelope handed over instantly,…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-4-async-await.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Fetching real data, written top to bottom</span>
+          <span class="lb">The last piece. await looks like it stops everything, and it does the opposite — the function steps aside and lets the rest of your page carry on.…</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 9 · What Comes Next</h2>
+          <p>Optional. The next four things to learn once the course proper is behind you.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m9-lesson-1-reduce.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Folding a whole list into one answer</span>
+          <span class="lb">The third member of the family, and the one people avoid longest. It looks strange because its little function takes two arguments instead of one…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-2-destructuring-spread.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Unpacking values, and the three dots</span>
+          <span class="lb">Two shortcuts that appear in almost every modern code sample. Destructuring pulls values out into their own boxes; the three dots either sweep up…</span></span>
+          <span class="lsteps">11<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-3-try-catch.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Handling failure without crashing</span>
+          <span class="lb">Real programs deal with bad data, dropped connections and missing files constantly. This is how you keep going when something goes wrong, instead…</span></span>
+          <span class="lsteps">11<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-4-classes-this.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Many objects from one template</span>
+          <span class="lb">Classes are a cookie cutter for objects. The hard part is one four-letter word: this. It has a single rule, and watching two objects run the same…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-5-modules.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Many files, talking to each other</span>
+          <span class="lb">One file stops being workable somewhere around three hundred lines. Splitting up is simple — one file offers things, another asks for them — and…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+
+  <footer>
+    Modules 1 to 8 are the course. Module 9 is optional and picks up where it leaves off.
+    After that: modules and <code>import</code>, then one framework, then a backend &mdash; in that order.
+  </footer>
+</div>
+<script>
+(function () {
+  var reduced =
+    window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- 1. Everything countable comes off the step numbers already printed on
+  // each card: the tick track under a lesson, each module's step total, and the
+  // bars in the chart below. One source, so they cannot drift apart when the
+  // lessons are regenerated.
+  var mods = [];
+  document.querySelectorAll(".mod").forEach(function (mod, n) {
+    var steps = 0,
+      each = [];
+    mod.querySelectorAll(".lcard").forEach(function (card) {
+      var s = Number.parseInt(card.querySelector(".lsteps").textContent, 10);
+      if (!s) return;
+      card.style.setProperty("--steps", s);
+      steps += s;
+      each.push(s);
+    });
+    mod.id = "m" + (n + 1);
+    var count = mod.querySelector(".modcount");
+    if (count && steps)
+      count.textContent = count.textContent.trim() + " · " + steps + " steps";
+    var h2 = mod.querySelector("h2");
+    mods.push({
+      id: mod.id,
+      n: n + 1,
+      steps: steps,
+      each: each,
+      title: h2 ? h2.textContent.trim() : "Module " + (n + 1),
+    });
+  });
+
+  // ---- 2. The course shape. Columns are scaled against the heaviest module
+  // rather than against zero: at this height, scaling from zero would flatten
+  // the differences that make the chart worth showing at all. The figure above
+  // each column keeps the real number available, so nothing is overstated.
+  var bars = document.getElementById("mapbars");
+  if (bars && mods.length) {
+    var tallest = mods.reduce(function (a, m) {
+      return Math.max(a, m.steps);
+    }, 0);
+    bars.innerHTML = mods
+      .map(function (m) {
+        var segs = m.each
+          .map(function (s) {
+            return '<span class="seg" style="flex-grow:' + s + '"></span>';
+          })
+          .join("");
+        return (
+          '<a class="bar" href="#' + m.id + '" aria-label="' + m.title + ", " +
+          m.each.length + " lessons, " + m.steps + ' animated steps">' +
+          '<span class="btrack"><span class="col" style="height:' +
+          Math.round((m.steps / tallest) * 100) + '%">' + segs +
+          '<span class="val">' + m.steps + "</span></span></span>" +
+          '<span class="lab">M' + m.n + "</span></a>"
+        );
+      })
+      .join("");
+  }
+
+  // ---- 3. A lesson, in miniature. Two boxes made and one changed — the real
+  // opening idea of Module 2, at the same six-step pace the lessons run at.
+  var CODE = [
+    '<i class="k">let</i> name <i class="k">=</i> <i class="s">"Asha"</i>;',
+    '<i class="k">let</i> age <i class="k">=</i> <i class="n">30</i>;',
+    "",
+    'age <i class="k">=</i> age <i class="k">+</i> <i class="n">1</i>;',
+  ];
+  var NAME = { n: "name", v: '"Asha"', t: "s" };
+  var WAS = { n: "age", v: "30", t: "n" };
+  var NOW = { n: "age", v: "31", t: "n" };
+  var STEPS = [
+    {
+      note: "Every lesson looks like this: the code on one side, a picture of what the computer is actually doing on the other.",
+    },
+    {
+      line: 1, mem: [NAME], lit: ["name"],
+      note: "Line 1 makes a box, writes <b>name</b> on the front of it, and puts some text inside.",
+    },
+    {
+      line: 2, mem: [NAME, WAS], lit: ["age"],
+      note: "Line 2 makes a second box. Each one holds its own value and neither knows about the other.",
+    },
+    {
+      line: 4, mem: [NAME, WAS], work: "age + 1  →  30 + 1",
+      note: "Line 4 works out the right-hand side <b>first</b>. <code>age</code> is 30 at this moment, so this is 30 + 1.",
+    },
+    {
+      line: 4, mem: [NAME, NOW], lit: ["age"], work: "→ 31",
+      note: "Only then does the answer go back into the box. The old value is gone.",
+    },
+    {
+      mem: [NAME, NOW],
+      note: "That is the whole idea. All 41 lessons run this way — pause anywhere, step back, replay.",
+    },
+  ];
+
+  var $ = function (id) {
+    return document.getElementById(id);
+  };
+  var code = $("dcode"), mem = $("dmem"), work = $("dwork"), note = $("dnote"),
+    tick = $("dtick"), seek = $("dseek"), play = $("dplay");
+  if (!code) return;
+
+  var at = 0, timer = null, wanted = !reduced, onScreen = true;
+
+  function paint() {
+    var s = STEPS[at];
+    code.innerHTML = CODE.map(function (line, n) {
+      return (
+        '<span class="dln' + (s.line === n + 1 ? " on" : "") + '" data-n="' +
+        (n + 1) + '">' + (line || "&nbsp;") + "</span>"
+      );
+    }).join("");
+    var boxes = s.mem || [];
+    mem.innerHTML = boxes.length
+      ? boxes
+          .map(function (b) {
+            return (
+              '<div class="dbox' + ((s.lit || []).includes(b.n) ? " lit" : "") +
+              '" data-t="' + b.t + '"><div class="dn">' + b.n + "</div>" +
+              '<div class="dv">' + b.v + "</div></div>"
+            );
+          })
+          .join("")
+      : '<span class="dempty">Nothing stored yet.</span>';
+    work.textContent = s.work || "";
+    // A brand-new element plays its animation on insertion, which saves the
+    // usual remove-class / force-reflow / re-add-class dance.
+    note.innerHTML = '<span class="fl">' + s.note + "</span>";
+    tick.textContent = at;
+    seek.value = at;
+    seek.style.setProperty("--pct", (at / (STEPS.length - 1)) * 100 + "%");
+  }
+
+  // Runs only when it is both wanted and actually on screen, so the loop is not
+  // animating to nobody while the reader is forty lessons further down the page.
+  function apply() {
+    clearInterval(timer);
+    timer = null;
+    if (wanted && onScreen)
+      timer = setInterval(function () {
+        at = (at + 1) % STEPS.length;
+        paint();
+      }, 2100);
+    play.innerHTML = timer ? "&#10073;&#10073;" : "&#9654;";
+    play.setAttribute(
+      "aria-label",
+      timer ? "Pause the demonstration" : "Play the demonstration"
+    );
+  }
+
+  play.addEventListener("click", function () {
+    wanted = !timer;
+    apply();
+  });
+  // Touching the scrubber is a request to take over, so stop the loop.
+  seek.addEventListener("input", function () {
+    wanted = false;
+    apply();
+    at = Math.max(0, Math.min(STEPS.length - 1, Number(seek.value)));
+    paint();
+  });
+
+  if (window.IntersectionObserver)
+    new IntersectionObserver(
+      function (entries) {
+        onScreen = entries[0].isIntersecting;
+        apply();
+      },
+      { threshold: 0.25 }
+    ).observe(code.closest(".demo"));
+
+  paint();
+  apply();
+})();
+</script>
+</body>
+</html>
