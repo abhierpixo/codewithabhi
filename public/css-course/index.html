@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS From Zero — All Lessons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--void:#1E1832;--slab:#2A2247;--slab-2:#332A55;--edge:#453A6B;--chalk:#EDE7FA;--dim:#9B90BC;
+    --amber:#FFC15E;--rose:#FF6392;--peri:#8B8CF0;--go:#7FD9A6;--ease:cubic-bezier(.22,1,.36,1)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--void);color:var(--chalk);font-family:"Newsreader",Georgia,serif;font-size:17px;
+    line-height:1.55;padding:clamp(24px,5vw,72px) clamp(16px,4vw,56px) 90px;
+    background-image:radial-gradient(circle at 12% 0%,rgba(139,140,240,.17),transparent 55%),
+                     radial-gradient(circle at 92% 8%,rgba(255,193,94,.1),transparent 50%);
+    background-attachment:fixed}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* Hero. The old single column left the right half of a laptop screen empty,
+     so the demonstration moves into a second column beside the headline
+     instead of the page stacking a row of figures under it. */
+  .hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);
+    gap:clamp(26px,4.5vw,60px);align-items:end}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;align-items:start;gap:32px}}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--peri)}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,6vw,68px);
+    line-height:.94;letter-spacing:-.035em;margin:16px 0 18px}
+  /* block, so the lockup always breaks as CSS / From Zero rather than
+     wherever the column width happens to put it */
+  h1 em{font-style:normal;color:var(--amber);display:block}
+  .lede{max-width:52ch;color:#CFC5E8;font-size:clamp(17px,2vw,20px)}
+
+  /* One obvious way in. Fifty-two links and no primary action left a beginner
+     to guess where the front door was. */
+  .start{display:inline-flex;align-items:center;gap:10px;margin-top:28px;
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;
+    background:var(--amber);color:var(--void);text-decoration:none;
+    padding:13px 24px;border-radius:12px;
+    transition:transform 160ms var(--ease),box-shadow 200ms}
+  .start:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,193,94,.24)}
+  .start:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .start i{font-style:normal;transition:transform 200ms var(--ease)}
+  .start:hover i{transform:translateX(4px)}
+  .howto{margin-top:22px;border:1px solid var(--edge);border-left:3px solid var(--go);
+    border-radius:0 13px 13px 0;background:var(--slab);padding:15px 19px}
+  .howto h3{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;margin-bottom:6px}
+  .howto p{font-size:15.5px;color:#CFC5E8}
+  .mod{margin-top:46px}
+  .modhead{border-bottom:1px solid var(--edge);padding-bottom:13px;margin-bottom:16px;position:relative}
+  .modhead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(21px,3vw,29px);letter-spacing:-.02em}
+  .modhead p{color:var(--dim);font-size:15px;margin-top:5px;max-width:62ch}
+  .modcount{position:absolute;right:0;top:2px;font-family:"JetBrains Mono",monospace;font-size:10px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+  @media(max-width:600px){.modcount{display:none}}
+  .lcards{display:flex;flex-direction:column;gap:9px}
+  .lcard{display:flex;gap:15px;align-items:center;text-decoration:none;padding:14px 17px;
+    border:1px solid var(--edge);border-radius:13px;background:var(--slab);
+    transition:border-color 200ms,background 200ms,transform 140ms var(--ease)}
+  .lcard:hover{border-color:var(--amber);background:var(--slab-2);transform:translateX(3px)}
+  .lcard:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .lnum{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--dim);background:var(--void);
+    border:1px solid var(--edge);border-radius:9px;width:34px;height:34px;display:grid;
+    place-items:center;flex:0 0 auto}
+  .lcard:hover .lnum{color:var(--amber);border-color:var(--amber)}
+  .lbody{flex:1;min-width:0}
+  .lt{font-family:"Bricolage Grotesque",sans-serif;font-size:16px;color:var(--chalk);display:block;
+    line-height:1.25}
+  .lb{font-size:13.5px;color:var(--dim);display:block;margin-top:3px;line-height:1.4}
+  .lsteps{font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--dim);text-align:right;
+    flex:0 0 auto;line-height:1.1}
+  .lsteps em{display:block;font-style:normal;font-size:8.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#584B7F;margin-top:2px}
+  @media(max-width:520px){.lsteps{display:none}}
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--edge);color:var(--dim);
+    font-size:14.5px;max-width:62ch}
+
+  /* ---- the hero demo: one real lesson, running ----------------------------
+     A contents page for an animated course that is itself motionless argues
+     against its own product. This is a working miniature of a lesson, built
+     from the same parts the real ones use — highlighted line, the box, one
+     sentence — so the page demonstrates rather than describes. */
+  .demo{border:1px solid var(--edge);border-radius:16px;background:var(--slab);
+    padding:16px;display:flex;flex-direction:column;gap:13px}
+  .dcap{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;
+    align-items:center;gap:12px}
+  .dcap b{color:var(--amber);font-weight:400}
+  .dcode{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;
+    background:var(--void);border:1px solid var(--edge);border-radius:11px;padding:9px 0;
+    overflow-x:auto}
+  .dln{display:block;padding:0 10px 0 32px;position:relative;color:#B7ABD8;border-radius:0;
+    transition:background 320ms var(--ease),color 220ms}
+  .dln::before{content:attr(data-n);position:absolute;left:11px;color:#584B7F;font-size:10.5px}
+  .dln.on{background:rgba(255,193,94,.15);color:var(--chalk);box-shadow:inset 2px 0 0 var(--amber)}
+  .dcode i{font-style:normal}
+  .dcode .k{color:var(--peri)}.dcode .s{color:var(--go)}.dcode .n{color:var(--rose)}
+
+  .dstage{border:1px solid var(--edge);border-radius:11px;background:var(--void);
+    padding:11px 12px;min-height:92px;display:flex;flex-direction:column;gap:10px}
+  .dsl{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:#584B7F;display:flex;justify-content:space-between;gap:10px}
+  .dwork{color:var(--amber);letter-spacing:0;text-transform:none;font-size:11px}
+  /* The box model, drawn the way devtools draws it: each layer a ring around
+     the last, so a declaration adding space is something you watch happen
+     rather than something you are told about. */
+  .dmodel{display:flex;align-items:center;justify-content:center;min-height:52px;padding:2px 0}
+  .dm{position:relative;border-radius:9px;padding:17px 15px 11px;
+    animation:dpop 340ms var(--ease) both;transition:border-color 240ms,background 240ms}
+  .dmargin{border:1px dashed var(--edge);
+    background:repeating-linear-gradient(45deg,rgba(255,99,146,.09) 0 5px,transparent 5px 11px)}
+  .dborder{border:2px solid var(--dim);background:var(--slab)}
+  .dpadding{border:1px dashed var(--edge);background:rgba(127,217,166,.11)}
+  @keyframes dpop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+  .dml{position:absolute;top:3px;left:7px;font-family:"JetBrains Mono",monospace;font-size:8px;
+    letter-spacing:.13em;text-transform:uppercase;color:#584B7F;transition:color 240ms}
+  .dm.lit{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,193,94,.14)}
+  .dm.lit>.dml{color:var(--amber)}
+  .dcontent{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--chalk);
+    background:var(--slab-2);border:1px solid var(--edge);border-radius:6px;padding:7px 13px}
+
+  .dbar{display:flex;align-items:center;gap:11px}
+  .dplay{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;
+    background:var(--amber);color:var(--void);font-size:12px;display:grid;place-items:center;
+    transition:transform 150ms var(--ease),filter 150ms}
+  .dplay:hover{filter:brightness(1.1);transform:scale(1.06)}
+  .dplay:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dseek{-webkit-appearance:none;appearance:none;flex:1;height:20px;background:transparent;
+    cursor:pointer;margin:0}
+  .dseek::-webkit-slider-runnable-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-moz-range-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--chalk);border:2px solid var(--void);margin-top:-4.5px}
+  .dseek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--chalk);
+    border:2px solid var(--void)}
+  .dseek:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dnote{font-size:14.5px;line-height:1.45;color:#CFC5E8;min-height:63px}
+  .dnote b{color:var(--chalk);font-weight:500}
+  .dnote code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--slab-2);
+    padding:1px 5px;border-radius:5px;color:var(--amber)}
+  .dnote .fl{display:block;animation:dnote 360ms var(--ease)}
+  @keyframes dnote{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+  /* ---- course shape: every module drawn to its real step count ---- */
+  .map{margin-top:44px;border-top:1px solid var(--edge);padding-top:22px}
+  .maphead{display:flex;justify-content:space-between;align-items:baseline;gap:22px;flex-wrap:wrap}
+  .maphead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:23px;
+    letter-spacing:-.02em}
+  .mapsum{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim)}
+  .mapsum b{color:var(--amber);font-weight:400}
+  /* padding-top leaves room for the tallest bar's figure, which sits above its column */
+  .mapbars{display:flex;align-items:flex-end;gap:clamp(5px,1vw,11px);height:186px;
+    margin-top:20px;padding-top:19px}
+  .bar{flex:1;display:flex;flex-direction:column;gap:7px;height:100%;text-decoration:none;
+    border-radius:8px}
+  .bar:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  /* the column is sized against this track, so the label below can never squeeze it */
+  .btrack{flex:1;display:flex;align-items:flex-end}
+  /* A column is banded into one segment per lesson. Height is the module's step
+     count; the banding is how many lessons make it up — so the layout modules
+     read as both the heaviest and the most divided, which is exactly what they are. */
+  .bar .col{width:100%;position:relative;display:flex;flex-direction:column;gap:2px;
+    transition:transform 240ms var(--ease)}
+  .seg{flex:1 1 0;min-height:3px;border-radius:3px;background:var(--slab-2);
+    border:1px solid var(--edge);transition:background 240ms,border-color 240ms}
+  .seg:first-child{border-radius:6px 6px 3px 3px}
+  .bar:hover .seg,.bar:focus-visible .seg{background:var(--amber);border-color:var(--amber)}
+  .bar .val{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);
+    position:absolute;top:-17px;left:0;right:0;text-align:center;transition:color 240ms}
+  .bar .lab{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#584B7F;
+    transition:color 240ms}
+  .bar:hover .col,.bar:focus-visible .col{transform:translateY(-3px)}
+  .bar:hover .val,.bar:focus-visible .val,.bar:hover .lab,.bar:focus-visible .lab{color:var(--amber)}
+  .map .hint{font-size:13px;color:var(--dim);margin-top:14px;max-width:62ch}
+
+  @media(prefers-reduced-motion:reduce){
+    .lcard,.start,.start i,.dln,.dm,.dml,.bar .col,.seg,.bar .val,.bar .lab{transition:none}
+    .lcard:hover,.start:hover,.start:hover i,
+    .bar:hover .col,.bar:focus-visible .col{transform:none}
+    .dm,.dnote .fl{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">An animated course for complete beginners</p>
+      <h1>CSS <em>From Zero</em></h1>
+      <p class="lede">Every lesson is an animation you control. The rules on the left, a picture of
+      what the browser actually draws on the right, and one plain sentence explaining each step. No
+      prior coding experience assumed, and nothing to install.</p>
+      <a class="start" href="m1-lesson-1-what-css-does.html">Start with lesson 1 <i>&rarr;</i></a>
+    </div>
+
+    <!-- A real lesson, in miniature and running. Built by the script below. -->
+    <div class="demo">
+      <div class="dcap"><span>A lesson, running</span><span><b id="dtick">0</b> / 5</span></div>
+      <pre class="dcode" id="dcode"></pre>
+      <div class="dstage">
+        <div class="dsl"><span>The box the browser draws</span><span class="dwork" id="dwork"></span></div>
+        <div class="dmodel" id="dmodel"></div>
+      </div>
+      <div class="dbar">
+        <button class="dplay" id="dplay" type="button" aria-label="Pause the demonstration">&#10073;&#10073;</button>
+        <input class="dseek" id="dseek" type="range" min="0" max="5" value="0" step="1"
+               aria-label="Step through the demonstration">
+      </div>
+      <p class="dnote" id="dnote">Every lesson works like this.</p>
+    </div>
+  </div>
+
+  <section class="map" aria-labelledby="maph">
+    <div class="maphead">
+      <h2 id="maph">The shape of the course</h2>
+      <p class="mapsum"><b>52</b> lessons &middot; <b>13</b> modules &middot;
+        <b>645</b> animated steps &middot; <b>~14h</b> with practice</p>
+    </div>
+    <div class="mapbars" id="mapbars"></div>
+    <p class="hint">One column per module, as tall as the animated steps inside it and banded once
+      per lesson &mdash; so you can see where the course gets heavy before you start. Click a column
+      to jump to that module.</p>
+  </section>
+
+  <div class="howto">
+    <h3>How to actually use this</h3>
+    <p>Watch each lesson once at normal speed to see its shape. Then step through it manually a second
+    time and try to predict what happens <em>before</em> pressing the button. Predicting is what turns
+    watching into knowing. Use the scrubber to jump back to any moment.</p>
+  </div>
+
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 1 · Getting Started</h2>
+          <p>What CSS does, how a rule is built, and how to attach it.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m1-lesson-1-what-css-does.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">A page is never unstyled</span>
+          <span class="lb">Your first surprise: the browser already applied a stylesheet before you wrote a line. CSS is not adding appearance to something that has none —…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-2-anatomy-of-a-rule.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">One rule, taken apart</span>
+          <span class="lb">Six parts, and CSS reports nothing when any of them is wrong. It skips what it cannot understand and carries on — which is why a single missing…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m1-lesson-3-attaching-css.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Three ways to attach it, and which to choose</span>
+          <span class="lb">One of the three is right almost every time. The other two have narrow legitimate uses — and one of them quietly causes a problem you will not…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 2 · Selectors</h2>
+          <p>Choosing which elements a rule applies to — where most of CSS’s power lives.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m2-lesson-1-type-class-id.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Three selectors, and one you should avoid</span>
+          <span class="lb">Two of these you will use constantly. The third works perfectly and quietly poisons a stylesheet — and the reason has nothing to do with syntax.</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-2-combinators.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Selecting by position in the tree</span>
+          <span class="lb">Four characters that select relationships rather than things. They are precise, occasionally essential, and the fastest way to write a stylesheet…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-3-pseudo-classes.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Selecting by state and position</span>
+          <span class="lb">State belongs to the user and position changes as content does — neither can be labelled with a class. One of these selectors is also the…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-4-pseudo-elements.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Styling parts that are not elements</span>
+          <span class="lb">These create a box that exists in the render and not in the document. That is exactly what makes them useful for decoration — and exactly why…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m2-lesson-5-attributes-and-groups.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Selecting on attributes, and stopping repetition</span>
+          <span class="lb">Attribute selectors let a stylesheet react to markup you did not label. Grouping stops you writing the same block three times — and two modern…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 3 · The Cascade</h2>
+          <p>Why a rule is ignored. Every “my CSS isn’t working” is answered here.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m3-lesson-1-inheritance.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">What flows down the tree</span>
+          <span class="lb">Set a colour on body and every paragraph gets it. Set a border and nothing does. There is one sentence behind that, and knowing it removes a whole…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-2-specificity.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Which rule wins</span>
+          <span class="lb">Every selector carries a score of three numbers, compared left to right. The part that feels wrong until you see it counted: the columns are…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-3-the-cascade.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Four steps decide it, and specificity is the third</span>
+          <span class="lb">Importance, then layers, then specificity, then source order. Each step is only consulted if the one above tied — which is how an id selector can…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m3-lesson-4-why-css-not-working.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Six reasons a rule does nothing, and no error for any of them</span>
+          <span class="lb">Six broken rules, six different causes, zero error messages. A checklist run in the right order finds any of them in under a minute — and the…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 4 · The Box Model</h2>
+          <p>Four invisible rings around every element, and the arithmetic that surprises everyone.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m4-lesson-1-every-element-is-a-box.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Four layers, three of them invisible</span>
+          <span class="lb">Content, padding, border, margin — wrapped around every element on every page. Once you can see the rings, spacing stops being a matter of nudging…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-2-padding-border-margin.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Which space to use where</span>
+          <span class="lb">One shorthand pattern covers all three, and one decision separates people who space things confidently from people who nudge numbers: does the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-3-box-sizing.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Making width mean what you think</span>
+          <span class="lb">By default, width: 300px plus padding and border makes an element wider than 300px. Watch three equal columns overflow because of it, then watch…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-4-margin-collapse.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Two margins meet and become one</span>
+          <span class="lb">30 plus 20 makes 30. Vertical margins that touch merge instead of adding, and a margin on a first child can escape its parent entirely — which…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m4-lesson-5-sizing-and-overflow.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Set limits, not sizes</span>
+          <span class="lb">A fixed width breaks on a phone and a fixed height silently cuts your text off. The limit properties do the same job and survive longer content,…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 5 · Values, Units and Colour</h2>
+          <p>Units that respect the reader, colour you can reason about, and design tokens.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m5-lesson-1-units.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Three units, and one that compounds</span>
+          <span class="lb">px ignores the user entirely. em multiplies at every level of nesting until your menu text has quietly shrunk by a quarter. rem does neither,…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-2-percentages-and-viewport.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Relative to what, exactly?</span>
+          <span class="lb">Every relative unit measures against something, and most confusion comes from not knowing what. Including the reason height: 50% so often does…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-3-colour.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Colour you can reason about</span>
+          <span class="lb">Hex is compact and impossible to adjust in your head. hsl gives you a whole scale by changing one number — and the contrast check at the end is…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m5-lesson-4-custom-properties.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Name a value once, use it everywhere</span>
+          <span class="lb">Unlike a preprocessor variable, these cascade and inherit — so redefining one inside a component or a media query updates everything below it.…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 6 · Flow and Display</h2>
+          <p>The layout you already have before writing any layout code.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m6-lesson-1-normal-flow.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">The layout you have before you write any</span>
+          <span class="lb">Most beginners reach for flexbox immediately. A great deal of the web is better left in normal flow — which is responsive by default, needs no…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-2-display.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">One property that changes the children</span>
+          <span class="lb">Set on a container, display governs how its children are laid out rather than the container itself — which is why setting flex on the thing you…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m6-lesson-3-overflow.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">When content does not fit</span>
+          <span class="lb">Including the ten-second trick for finding whichever element is making a page scroll sideways on a phone — and why hiding that overflow is the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 7 · Flexbox</h2>
+          <p>One dimension at a time — and the two axes that make every property make sense.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m7-lesson-1-the-two-axes.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Two axes, and everything follows</span>
+          <span class="lb">Half of all flexbox confusion is using justify-content when you meant align-items. Once the axes are drawn on the container, that stops happening…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-2-aligning.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Placing items along both axes</span>
+          <span class="lb">Every value shown on the same row of items, so the difference between space-between, space-around and space-evenly is obvious rather than memorised.</span></span>
+          <span class="lsteps">14<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-3-grow-shrink-basis.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">The three numbers behind flex</span>
+          <span class="lb">flex: 1 is not “equal width”, it is “share the leftover equally from a basis of zero”. Plus the hidden min-width: auto behind almost every row…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-4-wrapping-and-order.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">When items do not fit on one line</span>
+          <span class="lb">Wrapping plus a flex basis gives you a responsive card row with no media query at all. It also introduces align-content, which does nothing unless…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m7-lesson-5-flex-patterns.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">Six layouts you will build forever</span>
+          <span class="lb">No new properties. Six shapes that cover a large proportion of real layout work — and not one of them needs a media query.</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 8 · Grid</h2>
+          <p>Two dimensions at once, and a grid that responds with no breakpoints at all.</p>
+          <span class="modcount">5 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m8-lesson-1-rows-and-columns.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Two dimensions at once</span>
+          <span class="lb">Grid is not a newer flexbox — it is a different tool for a different shape. And the first thing to internalise is that it numbers the lines…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-2-flexible-tracks.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">A grid that responds with no breakpoints</span>
+          <span class="lb">One declaration takes a card grid from four columns to one as the container narrows, with no media query anywhere. Plus grid's version of the trap…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-3-placing-items.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Putting an item exactly where you want it</span>
+          <span class="lb">Placement refers to the numbered lines, not the tracks — which is why 1 / 3 spans two columns. And grid will happily let two items overlap without…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-4-named-areas.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Draw the layout in the stylesheet</span>
+          <span class="lb">You literally type a picture of the layout in quoted strings and give each region a name. Rearranging the whole page for a phone becomes a matter…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m8-lesson-5-flex-or-grid.html">
+          <span class="lnum">5</span>
+          <span class="lbody"><span class="lt">The decision, settled</span>
+          <span class="lb">No new properties. Three questions that settle almost every case — and the honest answer the question usually hides, which is that a real page…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 9 · Positioning and Layers</h2>
+          <p>Elements that sit on top of the layout — and why z-index so often does nothing.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m9-lesson-1-relative-and-absolute.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Out of the flow, and anchored to what?</span>
+          <span class="lb">One sentence explains nearly every positioning bug: an absolute element anchors to the nearest positioned ancestor — and if there is none, it…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-2-fixed-and-sticky.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Staying put while the page moves</span>
+          <span class="lb">sticky fails silently in exactly two ways — a missing threshold, and an ancestor with overflow set five levels up. Both cost people an hour the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-3-z-index.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Why z-index: 9999 does not work</span>
+          <span class="lb">A child with 9999 can sit below a sibling with 2, because a parent quietly created a sealed group. And you create those groups without knowing — a…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m9-lesson-4-when-to-position.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">For things on top of the layout</span>
+          <span class="lb">A layout built with absolute positioning looks perfect and breaks the moment the content changes length. One question decides every case: should…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 10 · Responsive Design</h2>
+          <p>What CSS does, how a rule is built, and how to attach it.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m10-lesson-1-mobile-first.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">One stylesheet, every screen</span>
+          <span class="lb">Written mobile-first, every query adds. Written the other way round, every query undoes the one before it — and the stylesheet doubles for the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m10-lesson-2-fluid-type.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Gliding instead of jumping</span>
+          <span class="lb">Breakpoints step between sizes and leave every width in between unhandled. clamp() glides — and the rem in the middle value is what keeps it…</span></span>
+          <span class="lsteps">13<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m10-lesson-3-responsive-patterns.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Layouts that adapt on their own</span>
+          <span class="lb">Five patterns that need no media query at all. Write these first and you will be surprised how few breakpoints a real page actually requires.</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m10-lesson-4-container-queries.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Components that respond to their own space</span>
+          <span class="lb">A card in a sidebar and a card in a wide main area get the same media query, because a media query only knows the window. Container queries let…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 11 · Typography and Decoration</h2>
+          <p>What CSS does, how a rule is built, and how to attach it.</p>
+          <span class="modcount">4 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m11-lesson-1-fonts.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Getting the typeface without the flash</span>
+          <span class="lb">The page renders before your font file arrives, and one property decides whether the visitor sees fallback text or no text at all. That is why…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m11-lesson-2-readable-text.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Four settings that do most of the work</span>
+          <span class="lb">Shown as the same paragraph at good and bad settings, because the difference is obvious on sight and invisible in a description. Including the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m11-lesson-3-backgrounds-and-shadows.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Surfaces and depth</span>
+          <span class="lb">A soft two-layer shadow reads as real elevation. A hard black one at a large offset is the clearest signal of inexperience in a design — and the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m11-lesson-4-borders-and-outline.html">
+          <span class="lnum">4</span>
+          <span class="lbody"><span class="lt">Edges, and the property you must never remove</span>
+          <span class="lb">An outline is not a border — it sits outside, takes no space, and is how a keyboard user knows where they are. Deleting it is invisible to you and…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 12 · Motion</h2>
+          <p>What CSS does, how a rule is built, and how to attach it.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m12-lesson-1-transitions.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Change, over time</span>
+          <span class="lb">Four parts, sensible defaults, and two situations where a perfectly valid transition does nothing at all — including the height animation that…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m12-lesson-2-keyframes.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Motion with more than two states</span>
+          <span class="lb">Keyframes are moments on a timeline and the browser fills in everything between. Including the two that catch people: a missing duration, and the…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m12-lesson-3-transforms-and-performance.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">Move things cheaply</span>
+          <span class="lb">The browser draws a frame in four stages, and which property you animate decides how many it must repeat. Two properties skip almost all of it —…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+      <section class="mod">
+        <header class="modhead">
+          <h2>Module 13 · Architecture and the Finish</h2>
+          <p>What CSS does, how a rule is built, and how to attach it.</p>
+          <span class="modcount">3 lessons</span>
+        </header>
+        <div class="lcards">
+        <a class="lcard" href="m13-lesson-1-organising.html">
+          <span class="lnum">1</span>
+          <span class="lbody"><span class="lt">Keeping CSS workable past a thousand lines</span>
+          <span class="lb">Stylesheets do not rot because they are badly written. They rot because escalating specificity makes every fix harder than the last, until nobody…</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m13-lesson-2-debugging.html">
+          <span class="lnum">2</span>
+          <span class="lbody"><span class="lt">Stop guessing, start looking</span>
+          <span class="lb">Five bugs, five causes, no error messages — and the browser already knows the answer to every one of them. This lesson is where it keeps them.</span></span>
+          <span class="lsteps">12<em>steps</em></span>
+        </a>
+        <a class="lcard" href="m13-lesson-3-full-site-restyled.html">
+          <span class="lnum">3</span>
+          <span class="lbody"><span class="lt">The same markup, a real stylesheet</span>
+          <span class="lb">The site from the HTML course's final lesson, with its markup untouched, styled properly in seven layers — and then the point the whole course…</span></span>
+          <span class="lsteps">15<em>steps</em></span>
+        </a>
+        </div>
+      </section>
+
+  <footer>
+    Thirteen modules, in order. This course teaches control, not taste &mdash; taste comes from
+    rebuilding work you admire, once you can execute what you decide you want.
+  </footer>
+</div>
+<script>
+(function () {
+  var reduced =
+    window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- 1. Everything countable comes off the step numbers already printed on
+  // each card: each module's step total and the bars in the chart below. One
+  // source, so they cannot drift apart when the lessons are regenerated.
+  var mods = [];
+  document.querySelectorAll(".mod").forEach(function (mod, n) {
+    var steps = 0,
+      each = [];
+    mod.querySelectorAll(".lcard").forEach(function (card) {
+      var s = Number.parseInt(card.querySelector(".lsteps").textContent, 10);
+      if (!s) return;
+      steps += s;
+      each.push(s);
+    });
+    mod.id = "m" + (n + 1);
+    var count = mod.querySelector(".modcount");
+    if (count && steps)
+      count.textContent = count.textContent.trim() + " · " + steps + " steps";
+    var h2 = mod.querySelector("h2");
+    mods.push({
+      id: mod.id,
+      n: n + 1,
+      steps: steps,
+      each: each,
+      title: h2 ? h2.textContent.trim() : "Module " + (n + 1),
+    });
+  });
+
+  // ---- 2. The course shape. Columns are scaled against the heaviest module
+  // rather than against zero: at this height, scaling from zero would flatten
+  // the differences that make the chart worth showing at all. The figure above
+  // each column keeps the real number available, so nothing is overstated.
+  var bars = document.getElementById("mapbars");
+  if (bars && mods.length) {
+    var tallest = mods.reduce(function (a, m) {
+      return Math.max(a, m.steps);
+    }, 0);
+    bars.innerHTML = mods
+      .map(function (m) {
+        var segs = m.each
+          .map(function (s) {
+            return '<span class="seg" style="flex-grow:' + s + '"></span>';
+          })
+          .join("");
+        return (
+          '<a class="bar" href="#' + m.id + '" aria-label="' + m.title + ", " +
+          m.each.length + " lessons, " + m.steps + ' animated steps">' +
+          '<span class="btrack"><span class="col" style="height:' +
+          Math.round((m.steps / tallest) * 100) + '%">' + segs +
+          '<span class="val">' + m.steps + "</span></span></span>" +
+          '<span class="lab">M' + m.n + "</span></a>"
+        );
+      })
+      .join("");
+  }
+
+  // ---- 3. A lesson, in miniature. One rule, applied a declaration at a time —
+  // the real opening idea of Module 4, at the same six-step pace the lessons
+  // run at. The three layers arrive inside-out, which is also the order they
+  // are written in, so the box is watched growing rather than described.
+  var CODE = [
+    '<i class="k">.card</i> {',
+    '  padding: <i class="n">16px</i>;',
+    '  border: <i class="n">2px</i> <i class="s">solid</i>;',
+    '  margin: <i class="n">12px</i>;',
+    "}",
+  ];
+  var STEPS = [
+    {
+      note: "Every lesson looks like this: the rules on one side, a picture of what the browser draws from them on the other.",
+    },
+    {
+      line: 1, layers: [], box: true, work: "1 element matched",
+      note: "Line 1 is the <b>selector</b>. It finds every element with <code>class=\"card\"</code>, and everything inside the braces is applied to what it found.",
+    },
+    {
+      line: 2, layers: ["padding"], box: true, lit: "padding", work: "+16px inside",
+      note: "Padding is space <b>inside</b> the box, between the content and the edge. The background colour reaches across it.",
+    },
+    {
+      line: 3, layers: ["padding", "border"], box: true, lit: "border", work: "+2px edge",
+      note: "The border is drawn around the padding. This line is where the element officially ends.",
+    },
+    {
+      line: 4, layers: ["padding", "border", "margin"], box: true, lit: "margin", work: "+12px outside",
+      note: "Margin is space <b>outside</b> the box. It pushes other elements away and is never painted — you cannot give it a colour.",
+    },
+    {
+      layers: ["padding", "border", "margin"], box: true,
+      note: "That is the whole idea. All 52 lessons run this way — pause anywhere, step back, replay.",
+    },
+  ];
+
+  var $ = function (id) {
+    return document.getElementById(id);
+  };
+  var code = $("dcode"), model = $("dmodel"), work = $("dwork"), note = $("dnote"),
+    tick = $("dtick"), seek = $("dseek"), play = $("dplay");
+  if (!code) return;
+
+  var at = 0, timer = null, wanted = !reduced, onScreen = true;
+
+  // Built from the content outwards, so each declaration wraps the box the
+  // previous one produced — the nesting is the explanation.
+  function draw(layers, lit) {
+    var html = '<div class="dcontent">Rain</div>';
+    ["padding", "border", "margin"].forEach(function (l) {
+      if (layers.indexOf(l) < 0) return;
+      html =
+        '<div class="dm d' + l + (lit === l ? " lit" : "") + '">' +
+        '<span class="dml">' + l + "</span>" + html + "</div>";
+    });
+    return html;
+  }
+
+  function paint() {
+    var s = STEPS[at];
+    code.innerHTML = CODE.map(function (line, n) {
+      return (
+        '<span class="dln' + (s.line === n + 1 ? " on" : "") + '" data-n="' +
+        (n + 1) + '">' + (line || "&nbsp;") + "</span>"
+      );
+    }).join("");
+    model.innerHTML = s.box
+      ? draw(s.layers || [], s.lit)
+      : '<span class="dcontent">Nothing styled yet.</span>';
+    work.textContent = s.work || "";
+    // A brand-new element plays its animation on insertion, which saves the
+    // usual remove-class / force-reflow / re-add-class dance.
+    note.innerHTML = '<span class="fl">' + s.note + "</span>";
+    tick.textContent = at;
+    seek.value = at;
+    seek.style.setProperty("--pct", (at / (STEPS.length - 1)) * 100 + "%");
+  }
+
+  // Runs only when it is both wanted and actually on screen, so the loop is not
+  // animating to nobody while the reader is forty lessons further down the page.
+  function apply() {
+    clearInterval(timer);
+    timer = null;
+    if (wanted && onScreen)
+      timer = setInterval(function () {
+        at = (at + 1) % STEPS.length;
+        paint();
+      }, 2100);
+    play.innerHTML = timer ? "&#10073;&#10073;" : "&#9654;";
+    play.setAttribute(
+      "aria-label",
+      timer ? "Pause the demonstration" : "Play the demonstration"
+    );
+  }
+
+  play.addEventListener("click", function () {
+    wanted = !timer;
+    apply();
+  });
+  // Touching the scrubber is a request to take over, so stop the loop.
+  seek.addEventListener("input", function () {
+    wanted = false;
+    apply();
+    at = Math.max(0, Math.min(STEPS.length - 1, Number(seek.value)));
+    paint();
+  });
+
+  if (window.IntersectionObserver)
+    new IntersectionObserver(
+      function (entries) {
+        onScreen = entries[0].isIntersecting;
+        apply();
+      },
+      { threshold: 0.25 }
+    ).observe(code.closest(".demo"));
+
+  paint();
+  apply();
+})();
+</script>
+</body>
+</html>

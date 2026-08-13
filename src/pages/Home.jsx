@@ -59,13 +59,13 @@ export default function Home({ onBook }) {
       });
     }
 
-    // The HTML and JavaScript courses are finished and ship as static pages
-    // under /html-course/ and /js-course/, so these are the cards on this page
-    // that lead somewhere real. Injected rather than baked into HOME_BODY
+    // The HTML, CSS and JavaScript courses are finished and ship as static pages
+    // under /html-course/, /css-course/ and /js-course/, so these are the cards on
+    // this page that lead somewhere real. Injected rather than baked into HOME_BODY
     // because that markup is a base64 blob ported verbatim. Note the explicit
     // "in": .reveal is opacity:0 until the scroll observer adds it, and that
     // observer only scans once, before this runs.
-    // Listed in learning order — HTML is the prerequisite, so it goes first.
+    // Listed in learning order — each is the prerequisite for the next.
     const FINISHED = [
       {
         title: "HTML From Zero",
@@ -74,6 +74,14 @@ export default function Home({ onBook }) {
           "46 animated lessons across 10 modules. Build a complete web page from an " +
           "empty file — structure, links, images, forms, tables and the head — with " +
           "the markup on one side and the page the browser builds on the other.",
+      },
+      {
+        title: "CSS From Zero",
+        href: "/css-course/",
+        blurb:
+          "52 animated lessons across 13 modules. Selectors, the cascade, the box " +
+          "model, flexbox, grid and positioning — watch each rule change the box the " +
+          "browser draws, instead of guessing which property finally worked.",
       },
       {
         title: "JavaScript From Zero",
