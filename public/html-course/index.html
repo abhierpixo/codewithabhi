@@ -16,20 +16,36 @@
     background-image:radial-gradient(circle at 12% 0%,rgba(139,140,240,.17),transparent 55%),
                      radial-gradient(circle at 92% 8%,rgba(255,193,94,.1),transparent 50%);
     background-attachment:fixed}
-  .wrap{max-width:960px;margin:0 auto}
+  .wrap{max-width:1180px;margin:0 auto}
+
+  /* Hero. The old single column left the right half of a laptop screen empty,
+     so the demonstration moves into a second column beside the headline
+     instead of the page stacking a row of figures under it. */
+  .hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);
+    gap:clamp(26px,4.5vw,60px);align-items:end}
+  @media(max-width:900px){.hero{grid-template-columns:1fr;align-items:start;gap:32px}}
   .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
     text-transform:uppercase;color:var(--peri)}
-  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,7vw,72px);
-    line-height:.96;letter-spacing:-.035em;margin:16px 0 18px;max-width:14ch}
-  h1 em{font-style:normal;color:var(--amber)}
-  .lede{max-width:58ch;color:#CFC5E8;font-size:clamp(17px,2vw,20px)}
-  .stats{display:flex;gap:11px;flex-wrap:wrap;margin-top:26px}
-  .stat{border:1px solid var(--edge);border-radius:12px;background:var(--slab);padding:11px 15px}
-  .stat b{font-family:"Bricolage Grotesque",sans-serif;font-size:21px;display:block;color:var(--amber)}
-  .stat span{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--dim)}
-  .howto{margin-top:34px;border:1px solid var(--edge);border-left:3px solid var(--go);
-    border-radius:0 13px 13px 0;background:var(--slab);padding:16px 20px;max-width:64ch}
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(34px,6vw,68px);
+    line-height:.94;letter-spacing:-.035em;margin:16px 0 18px}
+  /* block, so the lockup always breaks as HTML / From Zero rather than
+     wherever the column width happens to put it */
+  h1 em{font-style:normal;color:var(--amber);display:block}
+  .lede{max-width:52ch;color:#CFC5E8;font-size:clamp(17px,2vw,20px)}
+
+  /* One obvious way in. Forty-six links and no primary action left a beginner
+     to guess where the front door was. */
+  .start{display:inline-flex;align-items:center;gap:10px;margin-top:28px;
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:16px;
+    background:var(--amber);color:var(--void);text-decoration:none;
+    padding:13px 24px;border-radius:12px;
+    transition:transform 160ms var(--ease),box-shadow 200ms}
+  .start:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,193,94,.24)}
+  .start:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .start i{font-style:normal;transition:transform 200ms var(--ease)}
+  .start:hover i{transform:translateX(4px)}
+  .howto{margin-top:22px;border:1px solid var(--edge);border-left:3px solid var(--go);
+    border-radius:0 13px 13px 0;background:var(--slab);padding:15px 19px}
   .howto h3{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;margin-bottom:6px}
   .howto p{font-size:15.5px;color:#CFC5E8}
   .mod{margin-top:46px}
@@ -61,22 +77,157 @@
   @media(max-width:520px){.lsteps{display:none}}
   footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--edge);color:var(--dim);
     font-size:14.5px;max-width:62ch}
+
+  /* ---- the hero demo: one real lesson, running ----------------------------
+     A contents page for an animated course that is itself motionless argues
+     against its own product. This is a working miniature of a lesson, built
+     from the same parts the real ones use — highlighted line, the tree, one
+     sentence — so the page demonstrates rather than describes. */
+  .demo{border:1px solid var(--edge);border-radius:16px;background:var(--slab);
+    padding:16px;display:flex;flex-direction:column;gap:13px}
+  .dcap{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--dim);display:flex;justify-content:space-between;
+    align-items:center;gap:12px}
+  .dcap b{color:var(--amber);font-weight:400}
+  .dcode{font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.85;
+    background:var(--void);border:1px solid var(--edge);border-radius:11px;padding:9px 0;
+    overflow-x:auto}
+  .dln{display:block;padding:0 10px 0 32px;position:relative;color:#B7ABD8;border-radius:0;
+    transition:background 320ms var(--ease),color 220ms}
+  .dln::before{content:attr(data-n);position:absolute;left:11px;color:#584B7F;font-size:10.5px}
+  .dln.on{background:rgba(255,193,94,.15);color:var(--chalk);box-shadow:inset 2px 0 0 var(--amber)}
+  .dcode i{font-style:normal}
+  .dcode .k{color:var(--peri)}.dcode .s{color:var(--go)}
+
+  .dstage{border:1px solid var(--edge);border-radius:11px;background:var(--void);
+    padding:11px 12px;min-height:92px;display:flex;flex-direction:column;gap:10px}
+  .dsl{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.18em;
+    text-transform:uppercase;color:#584B7F;display:flex;justify-content:space-between;gap:10px}
+  .dwork{color:var(--amber);letter-spacing:0;text-transform:none;font-size:11px}
+  .dtree{font-family:"JetBrains Mono",monospace;display:flex;flex-direction:column;gap:5px;
+    min-height:52px}
+  /* Children hang off a rail rather than being merely indented: the whole point
+     of Module 2 is that nesting is containment, not decoration. */
+  .dkids{margin:5px 0 0 12px;padding-left:17px;border-left:1px solid var(--edge);
+    display:flex;flex-direction:column;gap:5px}
+  .dnode{display:flex;align-items:center;gap:8px;position:relative;
+    animation:dpop 340ms var(--ease) both}
+  .dkids .dnode::before{content:"";position:absolute;left:-17px;top:50%;width:11px;height:1px;
+    background:var(--edge)}
+  @keyframes dpop{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+  .dtag{font-size:12px;color:var(--peri);background:var(--slab-2);border:1px solid var(--edge);
+    border-radius:7px;padding:3px 8px;white-space:nowrap;transition:color 200ms,border-color 200ms}
+  .dtxt{font-size:12px;color:var(--go);min-width:0;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap}
+  .dnode.lit .dtag{border-color:var(--amber);color:var(--amber);
+    box-shadow:0 0 0 3px rgba(255,193,94,.14)}
+  .dempty{font-size:12.5px;color:#584B7F;font-style:italic;align-self:center}
+
+  .dbar{display:flex;align-items:center;gap:11px}
+  .dplay{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:0;cursor:pointer;
+    background:var(--amber);color:var(--void);font-size:12px;display:grid;place-items:center;
+    transition:transform 150ms var(--ease),filter 150ms}
+  .dplay:hover{filter:brightness(1.1);transform:scale(1.06)}
+  .dplay:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dseek{-webkit-appearance:none;appearance:none;flex:1;height:20px;background:transparent;
+    cursor:pointer;margin:0}
+  .dseek::-webkit-slider-runnable-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-moz-range-track{height:5px;border-radius:3px;
+    background:linear-gradient(90deg,var(--amber) var(--pct,0%),var(--edge) var(--pct,0%))}
+  .dseek::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--chalk);border:2px solid var(--void);margin-top:-4.5px}
+  .dseek::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--chalk);
+    border:2px solid var(--void)}
+  .dseek:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  .dnote{font-size:14.5px;line-height:1.45;color:#CFC5E8;min-height:63px}
+  .dnote b{color:var(--chalk);font-weight:500}
+  .dnote code{font-family:"JetBrains Mono",monospace;font-size:.85em;background:var(--slab-2);
+    padding:1px 5px;border-radius:5px;color:var(--amber)}
+  .dnote .fl{display:block;animation:dnote 360ms var(--ease)}
+  @keyframes dnote{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+  /* ---- course shape: every module drawn to its real step count ---- */
+  .map{margin-top:44px;border-top:1px solid var(--edge);padding-top:22px}
+  .maphead{display:flex;justify-content:space-between;align-items:baseline;gap:22px;flex-wrap:wrap}
+  .maphead h2{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:23px;
+    letter-spacing:-.02em}
+  .mapsum{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim)}
+  .mapsum b{color:var(--amber);font-weight:400}
+  /* padding-top leaves room for the tallest bar's figure, which sits above its column */
+  .mapbars{display:flex;align-items:flex-end;gap:clamp(5px,1vw,11px);height:186px;
+    margin-top:20px;padding-top:19px}
+  .bar{flex:1;display:flex;flex-direction:column;gap:7px;height:100%;text-decoration:none;
+    border-radius:8px}
+  .bar:focus-visible{outline:2px solid var(--peri);outline-offset:3px}
+  /* the column is sized against this track, so the label below can never squeeze it */
+  .btrack{flex:1;display:flex;align-items:flex-end}
+  /* A column is banded into one segment per lesson. Height is the module's step
+     count; the banding is how many lessons make it up. So Module 2 reads as both
+     heavy and highly divided, which is exactly what it is. */
+  .bar .col{width:100%;position:relative;display:flex;flex-direction:column;gap:2px;
+    transition:transform 240ms var(--ease)}
+  .seg{flex:1 1 0;min-height:3px;border-radius:3px;background:var(--slab-2);
+    border:1px solid var(--edge);transition:background 240ms,border-color 240ms}
+  .seg:first-child{border-radius:6px 6px 3px 3px}
+  .bar:hover .seg,.bar:focus-visible .seg{background:var(--amber);border-color:var(--amber)}
+  .bar .val{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--dim);
+    position:absolute;top:-17px;left:0;right:0;text-align:center;transition:color 240ms}
+  .bar .lab{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:#584B7F;
+    transition:color 240ms}
+  .bar:hover .col,.bar:focus-visible .col{transform:translateY(-3px)}
+  .bar:hover .val,.bar:focus-visible .val,.bar:hover .lab,.bar:focus-visible .lab{color:var(--amber)}
+  .map .hint{font-size:13px;color:var(--dim);margin-top:14px;max-width:62ch}
+
+  @media(prefers-reduced-motion:reduce){
+    .lcard,.start,.start i,.dln,.dnode,.dtag,.bar .col,.seg,.bar .val,.bar .lab{transition:none}
+    .lcard:hover,.start:hover,.start:hover i,
+    .bar:hover .col,.bar:focus-visible .col{transform:none}
+    .dnode,.dnote .fl{animation:none}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <p class="eyebrow">An animated course for complete beginners</p>
-  <h1>HTML <em>From Zero</em></h1>
-  <p class="lede">Every lesson is an animation you control. Code on the left, a picture of what the
-  computer is actually doing on the right, and one plain sentence explaining each step. No prior
-  coding experience assumed, and nothing to install.</p>
+  <div class="hero">
+    <div>
+      <p class="eyebrow">An animated course for complete beginners</p>
+      <h1>HTML <em>From Zero</em></h1>
+      <p class="lede">Every lesson is an animation you control. The markup on the left, a picture of
+      what the browser actually builds on the right, and one plain sentence explaining each step. No
+      prior coding experience assumed, and nothing to install.</p>
+      <a class="start" href="m1-lesson-1-what-a-web-page-is.html">Start with lesson 1 <i>&rarr;</i></a>
+    </div>
 
-  <div class="stats">
-    <div class="stat"><b>46</b><span>lessons</span></div>
-    <div class="stat"><b>10</b><span>modules</span></div>
-    <div class="stat"><b>633</b><span>animated steps</span></div>
-    <div class="stat"><b>~11h</b><span>with practice</span></div>
+    <!-- A real lesson, in miniature and running. Built by the script below. -->
+    <div class="demo">
+      <div class="dcap"><span>A lesson, running</span><span><b id="dtick">0</b> / 5</span></div>
+      <pre class="dcode" id="dcode"></pre>
+      <div class="dstage">
+        <div class="dsl"><span>The tree the browser builds</span><span class="dwork" id="dwork"></span></div>
+        <div class="dtree" id="dtree"></div>
+      </div>
+      <div class="dbar">
+        <button class="dplay" id="dplay" type="button" aria-label="Pause the demonstration">&#10073;&#10073;</button>
+        <input class="dseek" id="dseek" type="range" min="0" max="5" value="0" step="1"
+               aria-label="Step through the demonstration">
+      </div>
+      <p class="dnote" id="dnote">Every lesson works like this.</p>
+    </div>
   </div>
+
+  <section class="map" aria-labelledby="maph">
+    <div class="maphead">
+      <h2 id="maph">The shape of the course</h2>
+      <p class="mapsum"><b>46</b> lessons &middot; <b>10</b> modules &middot;
+        <b>633</b> animated steps &middot; <b>~11h</b> with practice</p>
+    </div>
+    <div class="mapbars" id="mapbars"></div>
+    <p class="hint">One column per module, as tall as the animated steps inside it and banded once
+      per lesson &mdash; so you can see where the course gets heavy before you start. Click a column
+      to jump to that module.</p>
+  </section>
 
   <div class="howto">
     <h3>How to actually use this</h3>
@@ -457,5 +608,192 @@
     and it is the very next thing to learn.
   </footer>
 </div>
+<script>
+(function () {
+  var reduced =
+    window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- 1. Everything countable comes off the step numbers already printed on
+  // each card: each module's step total and the bars in the chart below. One
+  // source, so they cannot drift apart when the lessons are regenerated.
+  var mods = [];
+  document.querySelectorAll(".mod").forEach(function (mod, n) {
+    var steps = 0,
+      each = [];
+    mod.querySelectorAll(".lcard").forEach(function (card) {
+      var s = Number.parseInt(card.querySelector(".lsteps").textContent, 10);
+      if (!s) return;
+      steps += s;
+      each.push(s);
+    });
+    mod.id = "m" + (n + 1);
+    var count = mod.querySelector(".modcount");
+    if (count && steps)
+      count.textContent = count.textContent.trim() + " · " + steps + " steps";
+    var h2 = mod.querySelector("h2");
+    mods.push({
+      id: mod.id,
+      n: n + 1,
+      steps: steps,
+      each: each,
+      title: h2 ? h2.textContent.trim() : "Module " + (n + 1),
+    });
+  });
+
+  // ---- 2. The course shape. Columns are scaled against the heaviest module
+  // rather than against zero: at this height, scaling from zero would flatten
+  // the differences that make the chart worth showing at all. The figure above
+  // each column keeps the real number available, so nothing is overstated.
+  var bars = document.getElementById("mapbars");
+  if (bars && mods.length) {
+    var tallest = mods.reduce(function (a, m) {
+      return Math.max(a, m.steps);
+    }, 0);
+    bars.innerHTML = mods
+      .map(function (m) {
+        var segs = m.each
+          .map(function (s) {
+            return '<span class="seg" style="flex-grow:' + s + '"></span>';
+          })
+          .join("");
+        return (
+          '<a class="bar" href="#' + m.id + '" aria-label="' + m.title + ", " +
+          m.each.length + " lessons, " + m.steps + ' animated steps">' +
+          '<span class="btrack"><span class="col" style="height:' +
+          Math.round((m.steps / tallest) * 100) + '%">' + segs +
+          '<span class="val">' + m.steps + "</span></span></span>" +
+          '<span class="lab">M' + m.n + "</span></a>"
+        );
+      })
+      .join("");
+  }
+
+  // ---- 3. A lesson, in miniature. One element opened, filled and closed —
+  // the real opening idea of Module 2, at the same six-step pace the lessons
+  // run at. Tags are escaped here because this is markup being displayed as
+  // text, which is itself a thing Module 3 has to teach.
+  var CODE = [
+    '<i class="k">&lt;article&gt;</i>',
+    '  <i class="k">&lt;h2&gt;</i><i class="s">Rain</i><i class="k">&lt;/h2&gt;</i>',
+    '  <i class="k">&lt;p&gt;</i><i class="s">It fell all night.</i><i class="k">&lt;/p&gt;</i>',
+    '<i class="k">&lt;/article&gt;</i>',
+  ];
+  var H2 = { tag: "h2", txt: "Rain" };
+  var P = { tag: "p", txt: "It fell all night." };
+  var STEPS = [
+    {
+      note: "Every lesson looks like this: the markup on one side, a picture of what the browser builds out of it on the other.",
+    },
+    {
+      line: 1, kids: [], root: true, lit: "article", work: "root element",
+      note: "The opening tag on line 1 makes an <b>article</b> element. Everything after it is inside that element until it closes.",
+    },
+    {
+      line: 2, kids: [H2], root: true, lit: "h2", work: "child of article",
+      note: "Line 2 is a whole element on one line — opened, filled, closed. Because it sits inside the article, it becomes a <b>child</b> of it.",
+    },
+    {
+      line: 3, kids: [H2, P], root: true, lit: "p", work: "child of article",
+      note: "Line 3 adds a second child. <code>h2</code> and <code>p</code> are <b>siblings</b>: both inside the article, neither inside the other.",
+    },
+    {
+      line: 4, kids: [H2, P], root: true, lit: "article", work: "article complete",
+      note: "The closing tag builds nothing new. All it does is say where the article ends — and that is what decides what ended up inside it.",
+    },
+    {
+      kids: [H2, P], root: true,
+      note: "That is the whole idea. All 46 lessons run this way — pause anywhere, step back, replay.",
+    },
+  ];
+
+  var $ = function (id) {
+    return document.getElementById(id);
+  };
+  var code = $("dcode"), tree = $("dtree"), work = $("dwork"), note = $("dnote"),
+    tick = $("dtick"), seek = $("dseek"), play = $("dplay");
+  if (!code) return;
+
+  var at = 0, timer = null, wanted = !reduced, onScreen = true;
+
+  function node(tag, txt, lit) {
+    return (
+      '<div class="dnode' + (lit ? " lit" : "") + '"><span class="dtag">&lt;' +
+      tag + "&gt;</span>" + (txt ? '<span class="dtxt">' + txt + "</span>" : "") +
+      "</div>"
+    );
+  }
+
+  function paint() {
+    var s = STEPS[at];
+    code.innerHTML = CODE.map(function (line, n) {
+      return (
+        '<span class="dln' + (s.line === n + 1 ? " on" : "") + '" data-n="' +
+        (n + 1) + '">' + (line || "&nbsp;") + "</span>"
+      );
+    }).join("");
+    var kids = s.kids || [];
+    tree.innerHTML = s.root
+      ? node("article", "", s.lit === "article") +
+        (kids.length
+          ? '<div class="dkids">' +
+            kids
+              .map(function (k) {
+                return node(k.tag, k.txt, s.lit === k.tag);
+              })
+              .join("") +
+            "</div>"
+          : "")
+      : '<span class="dempty">Nothing built yet.</span>';
+    work.textContent = s.work || "";
+    // A brand-new element plays its animation on insertion, which saves the
+    // usual remove-class / force-reflow / re-add-class dance.
+    note.innerHTML = '<span class="fl">' + s.note + "</span>";
+    tick.textContent = at;
+    seek.value = at;
+    seek.style.setProperty("--pct", (at / (STEPS.length - 1)) * 100 + "%");
+  }
+
+  // Runs only when it is both wanted and actually on screen, so the loop is not
+  // animating to nobody while the reader is forty lessons further down the page.
+  function apply() {
+    clearInterval(timer);
+    timer = null;
+    if (wanted && onScreen)
+      timer = setInterval(function () {
+        at = (at + 1) % STEPS.length;
+        paint();
+      }, 2100);
+    play.innerHTML = timer ? "&#10073;&#10073;" : "&#9654;";
+    play.setAttribute(
+      "aria-label",
+      timer ? "Pause the demonstration" : "Play the demonstration"
+    );
+  }
+
+  play.addEventListener("click", function () {
+    wanted = !timer;
+    apply();
+  });
+  // Touching the scrubber is a request to take over, so stop the loop.
+  seek.addEventListener("input", function () {
+    wanted = false;
+    apply();
+    at = Math.max(0, Math.min(STEPS.length - 1, Number(seek.value)));
+    paint();
+  });
+
+  if (window.IntersectionObserver)
+    new IntersectionObserver(
+      function (entries) {
+        onScreen = entries[0].isIntersecting;
+        apply();
+      },
+      { threshold: 0.25 }
+    ).observe(code.closest(".demo"));
+
+  paint();
+  apply();
+})();
+</script>
 </body>
 </html>
