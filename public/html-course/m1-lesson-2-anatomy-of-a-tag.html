@@ -389,10 +389,24 @@
   .lnav .hub{justify-content:center;align-items:center;min-width:118px}
   .lnav .hub .ttl{font-size:13px;color:var(--dim)}
   .lnav .off{opacity:.3;pointer-events:none}
+
+  /* Leaving a lesson. The lesson nav sits at the foot of a long page, and the
+     control labelled Back steps the animation rather than the browser — so the
+     way out needs its own button, above the fold and named for where it goes. */
+  .tohub{display:inline-flex;align-items:center;gap:9px;text-decoration:none;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);background:var(--slab);
+    border:1px solid var(--edge);border-radius:999px;padding:7px 15px;margin-bottom:18px;
+    transition:color 200ms,border-color 200ms}
+  .tohub:hover{color:var(--accent);border-color:var(--accent)}
+  .tohub:focus-visible{outline:2px solid var(--peri);outline-offset:2px}
+  .tohub i{font-style:normal;transition:transform 200ms var(--ease)}
+  .tohub:hover i{transform:translateX(-3px)}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <a class="tohub" href="index.html"><i>&#9664;</i> All lessons</a>
   <p class="eyebrow">Module 1 · Getting Started <span>/ Lesson 2 of 3</span></p>
   <h1>One element, <em>taken apart</em></h1>
   <p class="thesis">Almost every HTML error a beginner makes is a tag problem — unclosed, mismatched, or misspelled. Knowing exactly what the parts are turns those errors from mysterious into obvious.</p>
