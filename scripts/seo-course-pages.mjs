@@ -88,7 +88,7 @@ function headBlock({ title, description, url, image, jsonLd }) {
 function creditBlock(course, dir) {
   return `<!-- seo:credit -->
 <footer class="site-credit">
-  <p><strong>${course.name}</strong> is a free course by <a href="${ORIGIN}/">Abhishek Sinha</a>, a software engineer and trainer in Bengaluru.
+  <p><strong>${course.name}</strong> is a free course by <a href="${ORIGIN}/">Abhishek Sinha</a>, a senior software engineer who teaches live online.
   Want this taught live, with a project at the end? <a href="${ORIGIN}/">Book a free demo class</a>.
   Need an app built? <a href="${ORIGIN}/hire">Hire him</a>.
   More free courses: <a href="/html-course/">HTML</a> · <a href="/css-course/">CSS</a> · <a href="/js-course/">JavaScript</a>.</p>

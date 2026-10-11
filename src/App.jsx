@@ -46,7 +46,7 @@ export default function App() {
       {page}
       {!isHome && (
         <footer>
-          <p>© 2026 {SITE.owner} · Software &amp; Technical Trainer · Bengaluru, India</p>
+          <p>© 2026 {SITE.owner} · Software &amp; Technical Trainer · Live online training, worldwide</p>
           {/* real links, so every page is reachable by a crawler without running the app */}
           <div className="footer-links" role="navigation" aria-label="Footer">
             <a href={href('')}>Home</a>

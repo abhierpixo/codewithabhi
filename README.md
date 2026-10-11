@@ -37,8 +37,8 @@ The static courses carry their own metadata and a footer linking back here. Afte
 adding or renaming a lesson run `npm run seo:courses` to stamp it.
 
 After deploying: submit `https://codingwithabhi.com/sitemap.xml` in Google Search
-Console and Bing Webmaster Tools, and create a Google Business Profile (the schema
-already says Bengaluru) — those three bring the first requests in.
+Console and Bing Webmaster Tools. Training is online-only, so there is no local
+listing to set up; the copy and schema target "live online" searches.
 
 ## Project structure
 

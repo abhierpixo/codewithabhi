@@ -50,7 +50,7 @@ export const WEBSITE = {
   url: ORIGIN + '/',
   name: SITE_NAME,
   alternateName: 'codingwithabhi.com',
-  description: 'Software training and freelance development by Abhishek Sinha, Bengaluru.',
+  description: 'Live online software training and freelance development by Abhishek Sinha.',
   publisher: { '@id': PERSON_ID },
   inLanguage: 'en',
 }
@@ -91,10 +91,10 @@ const TRAINING = [
 const TRAINING_SCHEMA = TRAINING.map(([name, workload]) => ({
   '@type': 'Course',
   name,
-  description: `Live, hands-on ${name} training (1-on-1 or small group) with a capstone project, code reviews, interview preparation and post-course support. Online or in Bengaluru.`,
+  description: `Live, hands-on ${name} training, live online (1-on-1 or small group), with a capstone project, code reviews, interview preparation and post-course support.`,
   provider: { '@id': PERSON_ID },
   inLanguage: ['en', 'hi'],
-  hasCourseInstance: { '@type': 'CourseInstance', courseMode: ['Online', 'Onsite'], courseWorkload: workload, instructor: { '@id': PERSON_ID } },
+  hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'Online', courseWorkload: workload, instructor: { '@id': PERSON_ID } },
 }))
 
 const HOME_FAQ = [
@@ -103,7 +103,7 @@ const HOME_FAQ = [
   ['Can I learn while working a full-time job?', 'Yes. Sessions are scheduled around your availability, including evenings and weekends, and the roadmap is paced accordingly.'],
   ['What happens after the course ends?', 'Post-course support continues: doubt clearing, code reviews and interview preparation while you apply for roles.'],
   ['Is the first session really free?', 'Yes. The first 15-minute consultation and a demo class are free so you can judge the teaching style before paying anything.'],
-  ['Do you offer online classes outside Bengaluru?', 'Yes. Training is available online worldwide over video call, as well as in person in Bengaluru.'],
+  ['Is the training online?', 'Yes, all training is live online over video call, so you can join from anywhere in India or abroad. Sessions are 1-on-1 or in small groups.'],
 ]
 
 const faq = (pairs) => ({
@@ -131,10 +131,10 @@ const webPage = (type, { path, title, description }, extra = {}) => ({
 
 export const HOME_META = {
   path: '/',
-  title: 'Software Trainer & Freelance Developer in Bengaluru | Abhishek Sinha',
+  title: 'Live Online Coding Classes with a Senior Engineer | Abhishek Sinha',
   ogTitle: 'Learn software from someone who\u2019s built it',
   description:
-    'Live, hands-on coding classes in Bengaluru and online: web development, React, Angular, Next.js, React Native, Node.js, Python and Go, taught by an engineer with 14+ years at product companies. First session free.',
+    'Live online, hands-on coding classes in web development, React, Angular, Next.js, React Native, Node.js, Python and Go, taught 1-on-1 by an engineer with 14+ years at product companies. First session free.',
   type: 'website',
 }
 
@@ -150,7 +150,7 @@ export const HIRE_META = {
   path: '/hire',
   title: 'Hire a Freelance React Native, AI & Backend Developer | Abhishek Sinha',
   description:
-    'Freelance developer with 14+ years of experience building AI apps with OpenAI, React Native iOS/Android apps and Node, Python and Go backends. Written scope, weekly working software, clean handover. Bengaluru, IST, clients worldwide.',
+    'Freelance developer with 14+ years of experience building AI apps with OpenAI, React Native iOS/Android apps and Node, Python and Go backends. Written scope, weekly working software, clean handover. Based in India (IST), working with clients worldwide.',
   type: 'website',
 }
 
@@ -262,11 +262,12 @@ export function routeMeta(route) {
         url: ORIGIN + '/',
         image: OG_IMAGE,
         provider: { '@id': PERSON_ID },
-        areaServed: ['Bengaluru', 'IN', 'Worldwide'],
+        areaServed: 'Worldwide',
         availableLanguage: ['English', 'Hindi'],
         address: PERSON.address,
         priceRange: 'First session free',
-        description: '1-on-1 and small-group software training with capstone projects, code reviews and interview preparation. Classroom in Bengaluru, virtual worldwide.',
+        serviceType: 'Online software training',
+        description: 'Live online 1-on-1 and small-group software training with capstone projects, code reviews and interview preparation. Join from anywhere.',
       },
       ...LIVE_COURSE_SCHEMA,
       ...TRAINING_SCHEMA,

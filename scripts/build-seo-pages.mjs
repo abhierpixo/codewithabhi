@@ -66,7 +66,7 @@ function bodyFor(route, meta) {
   let inner = ''
   if (route.page === 'home') {
     inner = `<h1>Learn software from someone who’s built it</h1>
-        <p>I’m Abhishek Sinha, a software engineer in Bengaluru with 14+ years building enterprise products at companies including Aruba (HPE). I run live, hands-on training in web development, React, Angular, Next.js, React Native, Node.js, Python and Go, and I take on freelance AI, mobile and backend projects.</p>
+        <p>I’m Abhishek Sinha, a software engineer with 14+ years building enterprise products at companies including Aruba (HPE). I run live online, hands-on training in web development, React, Angular, Next.js, React Native, Node.js, Python and Go, and I take on freelance AI, mobile and backend projects.</p>
         <ul>
           <li><a href="/work">What I’ve built</a></li>
           <li><a href="/hire">Hire me for a project</a></li>
