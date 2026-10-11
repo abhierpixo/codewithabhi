@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { go, useRoute, COURSES_LIVE } from '../router.js'
+import { go, href, useRoute, COURSES_LIVE } from '../router.js'
 
 export default function Nav({ onBook }) {
   const [open, setOpen] = useState(false)
@@ -10,19 +10,21 @@ export default function Nav({ onBook }) {
   const ctaLabel = forClients ? 'Start a project' : 'Book free demo'
   const ctaService = forClients ? 'Project enquiry' : '15-min free consultation'
   const nav = (to) => { go(to); setOpen(false) }
-  // these render as anchors for styling but behave as buttons, so they need
-  // the key handling a real button would have given them for free
-  const activate = (fn) => ({
-    onClick: fn,
-    onKeyDown: (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn() }
+  // Real anchors with real hrefs — so the links are crawlable, middle-clickable
+  // and open-in-new-tab-able — but a plain click stays inside the app.
+  const link = (to) => ({
+    href: href(to),
+    onClick: (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return
+      e.preventDefault()
+      nav(to)
     },
   })
   return (
     <nav>
-      <div className="logo" role="button" tabIndex={0} {...activate(() => go(''))} style={{ cursor: 'pointer' }}>
+      <a className="logo" {...link('')} style={{ cursor: 'pointer', textDecoration: 'none' }} aria-label="Abhishek Sinha — home">
         abhishek<span>@</span>trainer:~$
-      </div>
+      </a>
       <button
         className={'burger' + (open ? ' open' : '')}
         aria-label="Menu"
@@ -31,9 +33,9 @@ export default function Nav({ onBook }) {
         <span></span><span></span><span></span>
       </button>
       <ul className={open ? 'open' : ''} id="navMenu">
-        <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav(''))}>Home</a></li>
-        <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('work'))}>What I've built</a></li>
-        <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('hire'))}>Hire me</a></li>
+        <li><a className="nav-link" {...link('')}>Home</a></li>
+        <li><a className="nav-link" {...link('work')}>What I've built</a></li>
+        <li><a className="nav-link" {...link('hire')}>Hire me</a></li>
         {/* Static pages under /html-course/, /css-course/ and /js-course/, not hash
             routes — so real hrefs, which also give middle-click and open-in-new-tab
             for free. Ungated: unlike the catalogue, these courses are finished.
@@ -42,7 +44,7 @@ export default function Nav({ onBook }) {
         <li><a className="nav-link" href="/css-course/">CSS course</a></li>
         <li><a className="nav-link" href="/js-course/">JavaScript course</a></li>
         {COURSES_LIVE && (
-          <li><a className="nav-link" role="button" tabIndex={0} {...activate(() => nav('courses'))}>All courses</a></li>
+          <li><a className="nav-link" {...link('courses')}>All courses</a></li>
         )}
         <li>
           <button type="button" className="nav-cta" onClick={() => { setOpen(false); onBook(ctaService) }}>

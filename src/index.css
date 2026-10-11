@@ -1024,3 +1024,9 @@ header h1 .line:nth-child(2){animation-delay:.38s}
 @media(max-width:374px){
   header h1{font-size:clamp(1.25rem,6.2vw,1.8rem)}
 }
+
+/* footer links on the inner pages — plain crawlable anchors */
+footer p{margin:0 0 10px}
+.footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px}
+.footer-links a{color:#8FA0BC;text-decoration:none}
+.footer-links a:hover{color:#E2E8F0;text-decoration:underline}

@@ -3,13 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Abhishek Sinha \u2014 Software & Technical Trainer. Portfolio + course site.",
+  "description": "Abhishek Sinha — Software & Technical Trainer. Portfolio + course site.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-seo-pages.mjs",
     "preview": "vite preview",
     "production": "node scripts/build-production-docs.mjs",
-    "thumbs": "node scripts/build-thumbnails.mjs"
+    "thumbs": "node scripts/build-thumbnails.mjs",
+    "seo:courses": "node scripts/seo-course-pages.mjs"
   },
   "dependencies": {
     "react": "^18.2.0",
