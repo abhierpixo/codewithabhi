@@ -36,6 +36,12 @@ export default function Home({ onBook }) {
     } catch (e) {
       console.warn("home script init:", e);
     }
+    // The page script appends its own <link rel="canonical"> every time it runs;
+    // App.jsx owns the head now, so drop the extra one or a second canonical
+    // pointing at "/" would survive a navigation to /work or /hire.
+    document.head
+      .querySelectorAll('link[rel="canonical"]')
+      .forEach((l, i) => i && l.remove());
 
     // course cards -> route to the Mosh-style detail pages. These link straight to
     // a detail page, so they need both flags — with only the catalogue live the

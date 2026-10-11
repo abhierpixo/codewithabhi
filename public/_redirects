@@ -1,0 +1,3 @@
+# Netlify: app routes are served by the prerendered shell for that path when one
+# exists (work/index.html, hire/index.html ...), otherwise by the root shell.
+/*  /index.html  200

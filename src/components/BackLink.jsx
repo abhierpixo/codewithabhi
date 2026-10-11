@@ -1,23 +1,22 @@
-import { go } from '../router.js'
+import { go, href } from '../router.js'
 
 /**
- * The "← Home" / "← All courses" affordance. Styled as text rather than a
- * button, so it needs the keyboard handling a real button would have given it.
+ * The "← Home" / "← All courses" affordance. A real link with a real href, so
+ * it is crawlable and works without JavaScript; a plain click stays in-app.
  */
 export default function BackLink({ to, children, style }) {
-  const nav = () => go(to)
   return (
-    <span
+    <a
       className="cp-back"
-      role="link"
-      tabIndex={0}
-      onClick={nav}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); nav() }
+      href={href(to)}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+        e.preventDefault()
+        go(to)
       }}
-      style={{ cursor: 'pointer', ...style }}
+      style={{ cursor: 'pointer', textDecoration: 'none', ...style }}
     >
       {children}
-    </span>
+    </a>
   )
 }
