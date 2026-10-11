@@ -101,7 +101,7 @@ export const PROCESS = [
 export const ENGAGEMENT = {
   availability: '',   // e.g. 'Taking on 1 new project from August'
   responseTime: '',   // e.g. 'Replies within 24 hours, IST business days'
-  timezone: 'Bengaluru, India · IST (UTC+5:30) · overlaps with EU mornings and US evenings',
+  timezone: 'India · IST (UTC+5:30) · overlaps with EU mornings and US evenings',
   models: '',         // e.g. 'Fixed-price per milestone, or hourly for ongoing work'
   startingAt: '',     // e.g. 'Projects typically start at $X'
 }
